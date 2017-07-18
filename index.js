@@ -16,11 +16,14 @@ const getWebConfig = () => {
 	return fs.existsSync(webconfigPath) ? require(webconfigPath) : null
 }
 
-const glue = () => {
-	const webconfig = getWebConfig()
-	const graphql = (webconfig || {}).graphql
-	const schemaPathInConfig = (graphql || {}).schema
-	const schemaFolder = path.join(schemaPathInConfig || 'schema', '**/*.js')
+const glue = schemaFolderPath => {
+	let schemaPathInConfig = null
+	if (!schemaFolderPath) {
+		const webconfig = getWebConfig()
+		const graphql = (webconfig || {}).graphql
+		schemaPathInConfig = (graphql || {}).schema
+	}
+	const schemaFolder = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.js')
 	const files = glob.sync(schemaFolder)
 	/*eslint-disable */
 	const modules = (files || []).map(f => require(path.join(process.cwd(), f)))
