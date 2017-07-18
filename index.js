@@ -25,12 +25,14 @@ const glue = () => {
 	/*eslint-disable */
 	const modules = (files || []).map(f => require(path.join(process.cwd(), f)))
 	/*eslint-enable */
-	const gluedSchema = (modules || []).reduce((a, { schema, resolver }) => {
+	const gluedSchema = (modules || []).reduce((a, { schema, resolver, query, mutation }) => {
 		const s = schema && typeof(schema) == 'string' ? (a.schema + '\n' + schema).trim() : a.schema
+		const q = query && typeof(query) == 'string' ? (a.query + '\n' + query).trim() : a.query
+		const m = mutation && typeof(mutation) == 'string' ? (a.mutation + '\n' + mutation).trim() : a.mutation
 		for(let key in resolver) 
 			a.resolver[key] = Object.assign((a.resolver[key] || {}), (resolver[key] || {}))
-		return { schema: s, resolver: a.resolver } 
-	}, { schema: '', resolver: {} })
+		return { schema: s, resolver: a.resolver, query: q, mutation: m } 
+	}, { schema: '', resolver: {}, query = 'type Query {', mutation = 'type Mutation {' })
 
 	if (!gluedSchema.schema) {
 		if (schemaPathInConfig)
@@ -42,7 +44,21 @@ const glue = () => {
 			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(process.cwd(), 'schema')}'`)
 			/*eslint-enable */
 	}
-	return gluedSchema
+
+	if (gluedSchema.query != 'type Query {') {
+		gluedSchema.query = gluedSchema.query + '\n}'
+		gluedSchema.schema = gluedSchema.schema + '\n' + gluedSchema.query
+	}
+	if (gluedSchema.mutation != 'type Mutation {') {
+		gluedSchema.mutation = gluedSchema.mutation + '\n}'
+		gluedSchema.schema = gluedSchema.schema + '\n' + gluedSchema.mutation
+	}
+
+	return { schema: gluedSchema.schema, resolver: gluedSchema.resolver }
 }
 
 exports.glue = glue
+
+
+
+
