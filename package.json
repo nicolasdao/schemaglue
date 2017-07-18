@@ -1,0 +1,35 @@
+{
+  "name": "schemaglue",
+  "version": "1.0.0",
+  "description": "Glues multiple parts of a GraphQL schema together(incl. resolvers). This library is designed specifically for building GraphQL schema using Apollo's graphql-tools.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "eslint index.js",
+    "release": "standard-version --prerelease alpha"
+  },
+  "keywords": [
+    "graphql",
+    "schema",
+    "resolver",
+    "appolo",
+    "graphql-tools"
+  ],
+  "author": "Nicolas Dao",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/nicolasdao/schemaglue/issues"
+  },
+  "homepage": "https://github.com/nicolasdao/schemaglue#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicolasdao/schemaglue.git"
+  },
+  "dependencies": {
+    "glob": "^7.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.2.0",
+    "standard-version": "^4.2.0"
+  }
+}
