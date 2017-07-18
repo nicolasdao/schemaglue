@@ -57,7 +57,9 @@ const glue = () => {
 	return { schema: gluedSchema.schema, resolver: gluedSchema.resolver }
 }
 
-exports.glue = glue
+module.exports = {
+	glue
+}
 
 
 
