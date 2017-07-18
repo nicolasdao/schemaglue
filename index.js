@@ -32,7 +32,7 @@ const glue = () => {
 		for(let key in resolver) 
 			a.resolver[key] = Object.assign((a.resolver[key] || {}), (resolver[key] || {}))
 		return { schema: s, resolver: a.resolver, query: q, mutation: m } 
-	}, { schema: '', resolver: {}, query = 'type Query {', mutation = 'type Mutation {' })
+	}, { schema: '', resolver: {}, query: 'type Query {', mutation: 'type Mutation {' })
 
 	if (!gluedSchema.schema) {
 		if (schemaPathInConfig)
