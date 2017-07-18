@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/nicolasdao/schemaglue/compare/v1.1.3-alpha.0...v1.2.0) (2017-07-18)
+
+
+### Features
+
+* Add the ability to set up the graphql model folder path programmatically + add more doc ([bd97dc6](https://github.com/nicolasdao/schemaglue/commit/bd97dc6))
+
+
+
 <a name="1.1.3-alpha.0"></a>
 ## [1.1.3-alpha.0](https://github.com/nicolasdao/schemaglue/compare/v1.1.2...v1.1.3-alpha.0) (2017-07-18)
 
