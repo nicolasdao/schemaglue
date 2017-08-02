@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.1"></a>
+## [1.3.1](https://github.com/nicolasdao/schemaglue/compare/v1.2.0...v1.3.1) (2017-08-02)
+
+
+### Bug Fixes
+
+* Add support for the appconfig file ([b5a82ba](https://github.com/nicolasdao/schemaglue/commit/b5a82ba))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/nicolasdao/schemaglue/compare/v1.1.3-alpha.0...v1.2.0) (2017-07-18)
 
