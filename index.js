@@ -9,18 +9,18 @@ const path = require('path')
 const fs = require('fs')
 const glob = require('glob')
 
-const getWebConfig = () => {	
+const getAppConfig = () => {	
 	/*eslint-disable */
-	const webconfigPath = path.join(process.cwd(), 'webconfig.json')
+	const appconfigPath = path.join(process.cwd(), 'appconfig.json')
 	/*eslint-enable */
-	return fs.existsSync(webconfigPath) ? require(webconfigPath) : null
+	return fs.existsSync(appconfigPath) ? require(appconfigPath) : null
 }
 
 const glue = schemaFolderPath => {
 	let schemaPathInConfig = null
 	if (!schemaFolderPath) {
-		const webconfig = getWebConfig()
-		const graphql = (webconfig || {}).graphql
+		const appconfig = getAppConfig()
+		const graphql = (appconfig || {}).graphql
 		schemaPathInConfig = (graphql || {}).schema
 	}
 	const schemaFolder = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.js')
@@ -40,7 +40,7 @@ const glue = schemaFolderPath => {
 	if (!gluedSchema.schema) {
 		if (schemaPathInConfig)
 			/*eslint-disable */
-			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(process.cwd(), schemaPathInConfig)}' defined in the webconfig.json`)
+			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(process.cwd(), schemaPathInConfig)}' defined in the appconfig.json`)
 			/*eslint-enable */
 		else
 			/*eslint-disable */
