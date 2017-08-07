@@ -147,7 +147,7 @@ _Project Structure Example_
 
 This is just one example of how to structure the schema and resolver. _**schemaglue**_ looks for all js files under a specific path. That specific path can be set up in 3 different ways:
 1. Programmatically: ```const { schema, resolver } = glue('src/graphql')``` 
-2. Using a _**webconfig.json**_ file. Set up the path as follow:
+2. Using a _**appconfig.json**_ file. Set up the path as follow:
 	```js
 	"graphql": {
 		"schema": "src/graphql"
@@ -266,7 +266,7 @@ const graphqlOptions = {
 exports.settlements = serveHTTP(graphqlOptions)
 ```
 
-The _**webconfig.json**_ file is configured with the following property:
+The _**appconfig.json**_ file is configured with the following property:
 
 ```js
 "graphql": {
@@ -274,7 +274,7 @@ The _**webconfig.json**_ file is configured with the following property:
 }
 ```
 
-If this property is not setup, or if no _webconfig.json_ has been defined, then _schemaglue_ assumes that all the schema and resolver definitions are located under a ./schema/ folder. If neither the _webconfig.json_ file nor the _schema_ folder are defined, then an exception will be throwned by the _glue_ method.
+If this property is not setup, or if no _appconfig.json_ has been defined, then _schemaglue_ assumes that all the schema and resolver definitions are located under a ./schema/ folder. If neither the _appconfig.json_ file nor the _schema_ folder are defined, then an exception will be throwned by the _glue_ method.
 
 ## This Is What We re Up To
 We are Neap, an Australian Technology consultancy powering the startup ecosystem in Sydney. We simply love building Tech and also meeting new people, so don't hesitate to connect with us at [https://neap.co](https://neap.co).
