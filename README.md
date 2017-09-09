@@ -5,7 +5,7 @@
 
 [1]: https://img.shields.io/npm/v/schemaglue.svg?style=flat
 [2]: https://www.npmjs.com/package/schemaglue
-## Intro
+
 Make your code more readable and understandable by breaking down your monolithic GraphQL schema and resolver into smaller domain models. _**SchemaGlue.js**_ will help glueing them back together.
 
 SchemaGlue.js is designed specifically for building GraphQL schema using the awesome [Apollo's graphql-tools.js](https://github.com/apollographql/graphql-tools).
@@ -28,9 +28,9 @@ const { glue } = require('schemaglue')
 const { schema, resolver } = glue('src/graphql')
 ```
 
-> NOTE: The following example assumes this project is hosted on Google Cloud Functions (Google serverless solution), but it is easily applicable to any other projects that uses [Apollo's graphql-tools.js](https://github.com/apollographql/graphql-tools). If you want to know more about hosting GraphQL APIs on Google Cloud Functions, check out those 2 projects:
+> NOTE: The following example assumes this project is hosted on Google Cloud Functions (Google serverless solution), but it is easily applicable to any other projects that uses [Apollo's graphql-tools.js](https://github.com/apollographql/graphql-tools). If you want to know more about hosting GraphQL APIs on Google Cloud Functions or Firebase (AWS Lambda coming soon), check out those 2 projects:
 > - [webfunc](https://github.com/nicolasdao/webfunc): An assistant to easily create & deploy Google Cloud Functions project.
-> - [google-graphql-functions](https://github.com/nicolasdao/google-graphql-functions): A GraphQL library that also exposes a GraphiQL front-end.
+> - [graphql-serverless](https://github.com/nicolasdao/graphql-serverless): A GraphQL plugin for webfunc that also exposes a GraphiQL front-end.
 
 #### Without SchemaGlue
 _Project Structure Example_
@@ -116,7 +116,8 @@ module.exports = {
 ```js
 // index.js
 
-const { serveHTTP } = require('google-graphql-functions')
+const { HttpHandler } = require('graphql-serverless')
+const { serveHttp, app } = require('webfunc')
 const { executableSchema } = require('./src/schema')
 
 const graphqlOptions = {
@@ -125,7 +126,9 @@ const graphqlOptions = {
     endpointURL: "/graphiql"
 }
 
-exports.{{entryPoint}} = serveHTTP(graphqlOptions)
+app.use(new HttpHandler(graphqlOptions))
+
+exports.main = serveHttp(app.resolve({ path: '/', handlerId: 'graphql' }))
 ```
 
 #### With SchemaGlue
@@ -176,8 +179,10 @@ exports.query = `
   products(id: Int): [Product]
 `
 
-// We could also add the same for mutation:
+// We could also add the same for mutation and subscription:
 // exports.mutation = `...`
+//
+// exports.subscription = `...`
 ```
 
 ```js
@@ -197,6 +202,10 @@ exports.resolver = {
             throw httpError(404, `Product with id ${id} does not exist.`)
         }
     }
+
+    // Add Mutation or Subscription here as well:
+    // Mutation: { ... }
+    // Subscription: { ... }
 }
 ```
 
@@ -219,8 +228,10 @@ exports.query = `
   variants(id: Int): [Variant]
 `
 
-// We could also add the same for mutation:
+// We could also add the same for mutation and subscription:
 // exports.mutation = `...`
+//
+// exports.subscription = `...`
 ```
 
 ```js
@@ -240,13 +251,18 @@ exports.resolver = {
             throw httpError(404, `Variant with id ${id} does not exist.`)
         }
     }
+
+    // Add Mutation or Subscription here as well:
+    // Mutation: { ... }
+    // Subscription: { ... }
 }
 ```
 
 ```js
 // index.js
 
-const { serveHTTP } = require('google-graphql-functions')
+const { HttpHandler } = require('graphql-serverless')
+const { serveHttp, app } = require('webfunc')
 const { makeExecutableSchema } = require('graphql-tools')
 const { glue } = require('schemaglue')
 
@@ -263,16 +279,17 @@ const graphqlOptions = {
     endpointURL: "/graphiql"
 }
 
-exports.settlements = serveHTTP(graphqlOptions)
+app.use(new HttpHandler(graphqlOptions))
+
+exports.main = serveHttp(app.resolve({ path: '/', handlerId: 'graphql' }))
 ```
 
-The _**appconfig.json**_ file is configured with the following property:
-
-```js
-"graphql": {
-	"schema": "src/graphql"
-}
-```
+> Notice that the path where the graphql schemas are located has been explicitely defined (_'src/graphql'_). This variable is optional and could have been defined in an _**appconfig.json**_ file instead. Simply add that file at the root of the project. Example:
+>```js
+>"graphql": {
+>	"schema": "src/graphql"
+>}
+>```
 
 If this property is not setup, or if no _appconfig.json_ has been defined, then _schemaglue_ assumes that all the schema and resolver definitions are located under a ./schema/ folder. If neither the _appconfig.json_ file nor the _schema_ folder are defined, then an exception will be throwned by the _glue_ method.
 

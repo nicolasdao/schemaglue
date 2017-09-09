@@ -28,19 +28,24 @@ const glue = schemaFolderPath => {
 	/*eslint-disable */
 	const modules = (files || []).map(f => require(path.join(process.cwd(), f)))
 	/*eslint-enable */
-	const gluedSchema = (modules || []).reduce((a, { schema, resolver, query, mutation }) => {
+	const gluedSchema = (modules || []).reduce((a, { schema, resolver, query, mutation, subscription }) => {
 		const s = schema && typeof(schema) == 'string' ? (a.schema + '\n' + schema).trim() : a.schema
 		const q = query && typeof(query) == 'string' ? (a.query + '\n' + query).trim() : a.query
 		const m = mutation && typeof(mutation) == 'string' ? (a.mutation + '\n' + mutation).trim() : a.mutation
+		const sub = subscription && typeof(subscription) == 'string' ? (a.subscription + '\n' + subscription).trim() : a.subscription
 		for(let key in resolver) 
 			a.resolver[key] = Object.assign((a.resolver[key] || {}), (resolver[key] || {}))
-		return { schema: s, resolver: a.resolver, query: q, mutation: m } 
-	}, { schema: '', resolver: {}, query: 'type Query {', mutation: 'type Mutation {' })
+		return { schema: s, resolver: a.resolver, query: q, mutation: m, subscription: sub } 
+	}, { schema: '', resolver: {}, query: 'type Query {', mutation: 'type Mutation {', subscription: 'type Subscription {' })
 
 	if (!gluedSchema.schema) {
 		if (schemaPathInConfig)
 			/*eslint-disable */
 			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(process.cwd(), schemaPathInConfig)}' defined in the appconfig.json`)
+			/*eslint-enable */
+		else if (schemaFolderPath)
+			/*eslint-disable */
+			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(process.cwd(), schemaFolderPath)}'`)
 			/*eslint-enable */
 		else
 			/*eslint-disable */
@@ -55,6 +60,10 @@ const glue = schemaFolderPath => {
 	if (gluedSchema.mutation != 'type Mutation {') {
 		gluedSchema.mutation = gluedSchema.mutation + '\n}'
 		gluedSchema.schema = gluedSchema.schema + '\n' + gluedSchema.mutation
+	}
+	if (gluedSchema.subscription != 'type Subscription {') {
+		gluedSchema.subscription = gluedSchema.subscription + '\n}'
+		gluedSchema.schema = gluedSchema.schema + '\n' + gluedSchema.subscription
 	}
 
 	return { schema: gluedSchema.schema, resolver: gluedSchema.resolver }

@@ -4,8 +4,8 @@
   "description": "Glues multiple parts of a GraphQL schema together(incl. resolvers). This library is designed specifically for building GraphQL schema using Apollo's graphql-tools.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint": "eslint index.js",
+    "test": "mocha",
+    "eslint": "eslint index.js test/ -- fix",
     "release": "standard-version"
   },
   "keywords": [
@@ -29,7 +29,11 @@
     "glob": "^7.1.2"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "^4.2.0",
+    "graphql": "^0.11.3",
+    "graphql-tools": "^1.2.2",
+    "mocha": "^3.5.0",
     "standard-version": "^4.2.0"
   }
 }
