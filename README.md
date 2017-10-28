@@ -19,6 +19,29 @@ npm install schemaglue --save
 
 ## How To use It
 #### In Short
+_**Without SchemaGlue - Stuck With a Monolithic Schema**_
+```
+- src/
+   |__ schema.js
+
+- index.js
+- package.json
+```
+_**With SchemaGlue - Structure Your Schema At Will**_
+```
+- src/
+   |__ graphql/
+          |__ product/
+          |       |__ schema.js
+          |       |__ resolver.js
+          |
+          |__ variant/
+                  |__ schema.js
+                  |__ resolver.js
+
+- index.js
+- package.json
+```
 
 ```js
 const { glue } = require('schemaglue')
@@ -154,8 +177,10 @@ This is just one example of how to structure the schema and resolver. _**schemag
 1. Programmatically: ```const { schema, resolver } = glue('src/graphql')``` 
 2. Using a _**appconfig.json**_ file. Set up the path as follow:
 	```js
-	"graphql": {
-		"schema": "src/graphql"
+	{
+		"graphql": {
+			"schema": "src/graphql"
+		}
 	}
 	```
 3. Default value is 'schema'. That means that if no value is set in 1 or 2, then this default folder is used. 
