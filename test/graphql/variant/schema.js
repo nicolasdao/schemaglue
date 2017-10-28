@@ -11,13 +11,6 @@ type VariantNameChangedMsg {
 }
 `
 // Notice that we have omitted to wrap the above with 'type Query { }'
-exports.query = `
-  # ### GET variants
-  #
-  # _Arguments_
-  # - **id**: Variant's id (optional)
-  variants(id: Int): [Variant]
-`
 
 exports.mutation =`
   # ### Update a variant's name

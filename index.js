@@ -16,15 +16,23 @@ const getAppConfig = () => {
 	return fs.existsSync(appconfigPath) ? require(appconfigPath) : null
 }
 
-const glue = schemaFolderPath => {
+const glue = (schemaFolderPath, options={}) => {
 	let schemaPathInConfig = null
+	let ignore = null
 	if (!schemaFolderPath) {
 		const appconfig = getAppConfig()
 		const graphql = (appconfig || {}).graphql
 		schemaPathInConfig = (graphql || {}).schema
+		ignore = (graphql || {}).ignore
 	}
 	const schemaFolder = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.js')
-	const files = glob.sync(schemaFolder)
+	const ignored = options.ignore || ignore
+		? typeof(options.ignore) == 'string'
+			? path.join(schemaFolderPath || schemaPathInConfig || 'schema', options.ignore) 
+			: options.ignore.map(i => path.join(schemaFolderPath || schemaPathInConfig || 'schema', i))
+		: undefined
+
+	const files = glob.sync(schemaFolder, { ignore: ignored })
 	/*eslint-disable */
 	const modules = (files || []).map(f => require(path.join(process.cwd(), f)))
 	/*eslint-enable */
