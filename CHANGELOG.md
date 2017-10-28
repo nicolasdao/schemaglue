@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.5.1"></a>
+## [1.5.1](https://github.com/nicolasdao/schemaglue/compare/v1.5.0...v1.5.1) (2017-10-28)
+
+
+### Bug Fixes
+
+* Bug [#3](https://github.com/nicolasdao/schemaglue/issues/3). Allow to ignore files and folders using globbing ([e70b8ce](https://github.com/nicolasdao/schemaglue/commit/e70b8ce))
+
+
+
 <a name="1.5.0"></a>
 # [1.5.0](https://github.com/nicolasdao/schemaglue/compare/v1.4.2...v1.5.0) (2017-10-28)
 
