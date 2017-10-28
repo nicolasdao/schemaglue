@@ -337,6 +337,16 @@ const { schema:schema1 } = glue('./src/graphql', { ignore: ['**/somefile.js', '*
 const { schema:schema1 } = glue('./src/graphql', { ignore: 'variant/*' })
 ```
 
+Using the _**appconfig.json**_ file:
+```js
+{
+	"graphql": {
+		"schema": "src/graphql",
+		"ignore": ["**/somefile.js", "**/someotherfile.js"]
+	}
+}
+```
+
 ## This Is What We re Up To
 We are Neap, an Australian Technology consultancy powering the startup ecosystem in Sydney. We simply love building Tech and also meeting new people, so don't hesitate to connect with us at [https://neap.co](https://neap.co).
 
