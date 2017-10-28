@@ -50,7 +50,10 @@ const { glue } = require('schemaglue')
 // comply to a certain convention described below. Those files describe
 // bits and pieces of the GraphQL schema and resolver that schemaglue will
 // reassemble into a single 'schema' string and 'resolver' object.
-const { schema, resolver } = glue('src/graphql')
+const options = {
+	ignore: '**/somefileyoudonotwant.js'
+}
+const { schema, resolver } = glue('src/graphql', options)
 ```
 
 > NOTE: The following example assumes this project is hosted on Google Cloud Functions (Google serverless solution), but it is easily applicable to any other projects that uses [Apollo's graphql-tools.js](https://github.com/apollographql/graphql-tools). If you want to know more about hosting GraphQL APIs on Google Cloud Functions or Firebase (AWS Lambda coming soon), check out those 2 projects:
@@ -313,12 +316,26 @@ exports.main = serveHttp(app.resolve({ path: '/', handlerId: 'graphql' }))
 
 > Notice that the path where the graphql schemas are located has been explicitely defined (_'src/graphql'_). This variable is optional and could have been defined in an _**appconfig.json**_ file instead. Simply add that file at the root of the project. Example:
 >```js
->"graphql": {
->	"schema": "src/graphql"
+>{
+>	"graphql": {
+>		"schema": "src/graphql"
+>	}
 >}
 >```
 
 If this property is not setup, or if no _appconfig.json_ has been defined, then _schemaglue_ assumes that all the schema and resolver definitions are located under a ./schema/ folder. If neither the _appconfig.json_ file nor the _schema_ folder are defined, then an exception will be throwned by the _glue_ method.
+## Ignore Option
+In some cases, you might want to ignore some specific files under the schema folder (by default, SchemaGlue will take into account all .js files). SchemaGlue adds support to ignore files or folders using [globbing](https://github.com/isaacs/node-glob):
+```js
+const { schema, resolver } = glue('./src/graphql', { ignore: '**/somefile.js' })
+```
+This will take into account all .js files under the folder _./src/graphql_, excluding all _somefile.js_ files. The _**ignore**_ property supports both a single string or an array of strings. 
+```js
+// Ignore more than 1 specific .js file
+const { schema:schema1 } = glue('./src/graphql', { ignore: ['**/somefile.js', '**/someotherfile.js'] })
+// Ignore all files under the ./src/graphql/variant folder
+const { schema:schema1 } = glue('./src/graphql', { ignore: 'variant/*' })
+```
 
 ## This Is What We re Up To
 We are Neap, an Australian Technology consultancy powering the startup ecosystem in Sydney. We simply love building Tech and also meeting new people, so don't hesitate to connect with us at [https://neap.co](https://neap.co).
