@@ -12,13 +12,6 @@ Make your code more readable and understandable by breaking down your monolithic
 
 SchemaGlue.js is designed specifically for building GraphQL schema using the awesome [Apollo's graphql-tools.js](https://github.com/apollographql/graphql-tools).
 
-## Install
-```
-npm install schemaglue --save
-```
-
-## How To use It
-#### In Short
 _**Without SchemaGlue - Stuck With a Monolithic Schema**_
 ```
 - src/
@@ -43,6 +36,13 @@ _**With SchemaGlue - Structure Your Schema At Will**_
 - package.json
 ```
 
+## Install
+```
+npm install schemaglue --save
+```
+
+## How To use It
+#### In Short
 ```js
 const { glue } = require('schemaglue')
 
