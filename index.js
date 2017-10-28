@@ -26,10 +26,11 @@ const glue = (schemaFolderPath, options={}) => {
 		ignore = (graphql || {}).ignore
 	}
 	const schemaFolder = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.js')
-	const ignored = options.ignore || ignore
-		? typeof(options.ignore) == 'string'
-			? path.join(schemaFolderPath || schemaPathInConfig || 'schema', options.ignore) 
-			: options.ignore.map(i => path.join(schemaFolderPath || schemaPathInConfig || 'schema', i))
+	const optionIgnore = options.ignore || ignore
+	const ignored = optionIgnore
+		? typeof(optionIgnore) == 'string'
+			? path.join(schemaFolderPath || schemaPathInConfig || 'schema', optionIgnore) 
+			: optionIgnore.map(i => path.join(schemaFolderPath || schemaPathInConfig || 'schema', i))
 		: undefined
 
 	const files = glob.sync(schemaFolder, { ignore: ignored })
