@@ -8,13 +8,14 @@
 [3]: https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master
 [4]: https://travis-ci.org/nicolasdao/schemaglue
 
-## Table Of Content
+# Table Of Content
 > * [Install](#install)
 > * [How To Use It](#how-to-use-it)
 >	- [In Short](#in-short)
 >	- [Ignoring Certain Files](#ignoring-certain-files)
 >	- [Interesting Examples](#interesting-examples)
 
+# What It Does
 Make your code more readable and understandable by breaking down your monolithic GraphQL schema and resolver into smaller domain models. _**SchemaGlue.js**_ will help glueing them back together.
 
 SchemaGlue.js is designed specifically for building GraphQL schema using the awesome [Apollo's graphql-tools.js](https://github.com/apollographql/graphql-tools).
@@ -43,13 +44,13 @@ _**With SchemaGlue - Structure Your Schema At Will**_
 - package.json
 ```
 
-## Install
+# Install
 ```
 npm install schemaglue --save
 ```
 
-## How To use It
-#### In Short
+# How To use It
+### In Short
 ```js
 const { glue } = require('schemaglue')
 
@@ -67,7 +68,7 @@ const { schema, resolver } = glue('src/graphql', options)
 > - [webfunc](https://github.com/nicolasdao/webfunc): An assistant to easily create & deploy Google Cloud Functions project.
 > - [graphql-serverless](https://github.com/nicolasdao/graphql-serverless): A GraphQL plugin for webfunc that also exposes a GraphiQL front-end.
 
-#### Without SchemaGlue
+### Without SchemaGlue
 _Project Structure Example_
 ```
 - src/
@@ -166,7 +167,7 @@ app.use(new HttpHandler(graphqlOptions))
 exports.main = serveHttp(app.resolve({ path: '/', handlerId: 'graphql' }))
 ```
 
-#### With SchemaGlue
+### With SchemaGlue
 _Project Structure Example_
 ```
 - src/
@@ -332,7 +333,7 @@ exports.main = serveHttp(app.resolve({ path: '/', handlerId: 'graphql' }))
 
 If this property is not setup, or if no _appconfig.json_ has been defined, then _schemaglue_ assumes that all the schema and resolver definitions are located under a ./schema/ folder. If neither the _appconfig.json_ file nor the _schema_ folder are defined, then an exception will be throwned by the _glue_ method.
 
-#### Ignoring Certain Files
+### Ignoring Certain Files
 In some cases, you might want to ignore some specific files under the schema folder (by default, SchemaGlue will take into account all .js files). SchemaGlue adds support to ignore files or folders using [globbing](https://github.com/isaacs/node-glob):
 ```js
 const { schema, resolver } = glue('./src/graphql', { ignore: '**/somefile.js' })
@@ -354,8 +355,9 @@ Using the _**appconfig.json**_ file:
 	}
 }
 ```
-#### Interesting Examples
+### Interesting Examples
 _**Unions & Interfaces**_
+
 If you're not familiar with this concept, check out this great article [GraphQL Tour: Interfaces and Unions](https://medium.com/the-graphqlhub/graphql-tour-interfaces-and-unions-7dd5be35de0d). 
 
 In our case, we're interested is knowing how to structure our code with unions or interfaces. If your schema is quiet small, I would recommend to manage your unions and intefaces definitions inside a single schema.js file per model:
@@ -473,10 +475,10 @@ exports.resolver = {
 }
 ```
 
-## This Is What We re Up To
+# This Is What We re Up To
 We are Neap, an Australian Technology consultancy powering the startup ecosystem in Sydney. We simply love building Tech and also meeting new people, so don't hesitate to connect with us at [https://neap.co](https://neap.co).
 
-## License
+# License
 Copyright (c) 2017, Neap Pty Ltd.
 All rights reserved.
 
