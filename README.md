@@ -35,6 +35,12 @@ _**With SchemaGlue - Structure Your Schema At Will**_
 - index.js
 - package.json
 ```
+## Table Of Content
+> * [Install](#install)
+> * [How To Use It](#how-to-use-it)
+>	- [In Short](#in-short)
+>	- [Ignoring Certain Files](#ignoring-certain-files)
+>	- [Interesting Examples](#interesting-examples)
 
 ## Install
 ```
@@ -324,7 +330,8 @@ exports.main = serveHttp(app.resolve({ path: '/', handlerId: 'graphql' }))
 >```
 
 If this property is not setup, or if no _appconfig.json_ has been defined, then _schemaglue_ assumes that all the schema and resolver definitions are located under a ./schema/ folder. If neither the _appconfig.json_ file nor the _schema_ folder are defined, then an exception will be throwned by the _glue_ method.
-## Ignore Option
+
+#### Ignoring Certain Files
 In some cases, you might want to ignore some specific files under the schema folder (by default, SchemaGlue will take into account all .js files). SchemaGlue adds support to ignore files or folders using [globbing](https://github.com/isaacs/node-glob):
 ```js
 const { schema, resolver } = glue('./src/graphql', { ignore: '**/somefile.js' })
@@ -346,6 +353,8 @@ Using the _**appconfig.json**_ file:
 	}
 }
 ```
+#### Interesting Examples
+
 
 ## This Is What We re Up To
 We are Neap, an Australian Technology consultancy powering the startup ecosystem in Sydney. We simply love building Tech and also meeting new people, so don't hesitate to connect with us at [https://neap.co](https://neap.co).
