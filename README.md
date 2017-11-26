@@ -360,7 +360,7 @@ _**Unions & Interfaces**_
 
 If you're not familiar with this concept, check out this great article [GraphQL Tour: Interfaces and Unions](https://medium.com/the-graphqlhub/graphql-tour-interfaces-and-unions-7dd5be35de0d). 
 
-In our case, we're interested is knowing how to structure our code with unions or interfaces. If your schema is quiet small, I would recommend to manage your unions and intefaces definitions inside a single schema.js file per model:
+In our case, we're interested is knowing how to structure our code with unions or interfaces. If your schema is small, I would recommend to manage your unions and intefaces definitions inside a single schema.js file per model:
 ```
 - src/
    |__ graphql/
