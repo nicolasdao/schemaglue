@@ -8,6 +8,13 @@
 [3]: https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master
 [4]: https://travis-ci.org/nicolasdao/schemaglue
 
+## Table Of Content
+> * [Install](#install)
+> * [How To Use It](#how-to-use-it)
+>	- [In Short](#in-short)
+>	- [Ignoring Certain Files](#ignoring-certain-files)
+>	- [Interesting Examples](#interesting-examples)
+
 Make your code more readable and understandable by breaking down your monolithic GraphQL schema and resolver into smaller domain models. _**SchemaGlue.js**_ will help glueing them back together.
 
 SchemaGlue.js is designed specifically for building GraphQL schema using the awesome [Apollo's graphql-tools.js](https://github.com/apollographql/graphql-tools).
@@ -35,12 +42,6 @@ _**With SchemaGlue - Structure Your Schema At Will**_
 - index.js
 - package.json
 ```
-## Table Of Content
-> * [Install](#install)
-> * [How To Use It](#how-to-use-it)
->	- [In Short](#in-short)
->	- [Ignoring Certain Files](#ignoring-certain-files)
->	- [Interesting Examples](#interesting-examples)
 
 ## Install
 ```
@@ -354,7 +355,123 @@ Using the _**appconfig.json**_ file:
 }
 ```
 #### Interesting Examples
+_**Unions & Interfaces**_
+If you're not familiar with this concept, check out this great article [GraphQL Tour: Interfaces and Unions](https://medium.com/the-graphqlhub/graphql-tour-interfaces-and-unions-7dd5be35de0d). 
 
+In our case, we're interested is knowing how to structure our code with unions or interfaces. If your schema is quiet small, I would recommend to manage your unions and intefaces definitions inside a single schema.js file per model:
+```
+- src/
+   |__ graphql/
+          |__ product/
+          |       |__ schema.js
+          |       |__ resolver.js
+          |
+          |__ variant/
+                  |__ schema.js
+                  |__ resolver.js
+
+- index.js
+- package.json
+```
+Let's take the _schema.js_ and _resolver.js_ under _src/graphql/product/_ as an example:
+_schema.js_
+```js
+exports.schema = `
+union Product = Bicycle | Racket
+
+type Bicycle {
+	id: ID!
+	brand: String!
+	wheels: Int!
+}
+
+type Racket {
+	id: ID!
+	brand: String!
+	sportType: SportType!
+}
+
+enum SportType {
+	TENNIS
+	SQUASH
+}
+`
+// Notice that we have omitted to wrap the above with 'type Query { }'
+exports.query = `
+  # ### GET products
+  #
+  # _Arguments_
+  # - **id**: Product's id (optional)
+  products(id: Int): [Product]
+`
+```
+
+_resolver.js_
+```js
+const httpError = require('http-errors')
+
+const productMocks = [{ 
+	id: 1,
+	brand: 'Giant',
+	wheels: 2 
+},{ 
+	id: 2,
+	brand: 'Prince',
+	sportType: 'TENNIS' 
+}]
+
+exports.resolver = {
+	Query: {
+		products(root, { id }, context) {
+			const results = id ? productMocks.filter(p => p.id == id) : productMocks
+			if (results.length > 0)
+				return results
+			else
+				throw httpError(404, `Product with id ${id} does not exist.`)
+		}
+	},
+
+	Product: {
+		__resolveType(obj, context, info) {
+			return	obj.wheels ? 'Bicycle' :
+					obj.sportType ? 'Racket' : null
+		}
+	}
+}
+```
+> Notice you need to define a _resolveType_ method for the _Product_ type under the _exports.resolver_
+
+When your schema becomes to big or too complex to manage in a single file, then nothing prevents you to break it down in as many pieces as you want. That's the all point of using _schemaglue_. Let's imagine that for whatever reasons, we want to isolate in its own file all the logic and definition of the unions for the Product model. We could refactor the code above as follow:
+```
+- src/
+   |__ graphql/
+          |__ product/
+          |       |__ schema.js
+          |       |__ resolver.js
+	  |	  |__ union.js
+          |
+          |__ variant/
+                  |__ schema.js
+                  |__ resolver.js
+
+- index.js
+- package.json
+```
+where the _union.js_ file is as follow:
+```js
+exports.schema = `
+union Product = Bicycle | Racket
+`
+
+exports.resolver = {
+	Product: {
+		__resolveType(obj, context, info) {
+			return	obj.wheels ? 'Bicycle' :
+				obj.sportType ? 'Racket' : null
+		}
+	}
+}
+```
 
 ## This Is What We re Up To
 We are Neap, an Australian Technology consultancy powering the startup ecosystem in Sydney. We simply love building Tech and also meeting new people, so don't hesitate to connect with us at [https://neap.co](https://neap.co).
