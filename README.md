@@ -8,7 +8,7 @@
 [3]: https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master
 [4]: https://travis-ci.org/nicolasdao/schemaglue
 
-# Table Of Content
+# Table Of Contents
 > * [Install](#install)
 > * [How To Use It](#how-to-use-it)
 >	- [In Short](#in-short)
