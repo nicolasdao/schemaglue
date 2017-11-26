@@ -376,6 +376,7 @@ In our case, we're interested is knowing how to structure our code with unions o
 - package.json
 ```
 Let's take the _schema.js_ and _resolver.js_ under _src/graphql/product/_ as an example:
+
 _schema.js_
 ```js
 exports.schema = `
