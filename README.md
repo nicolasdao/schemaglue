@@ -1,12 +1,6 @@
-<a href="https://neap.co" target="_blank"><img src="https://neap.co/img/neap_color_horizontal.png" alt="Neap Pty Ltd logo" title="Neap" height="100" width="225" style="float: right" align="right" /></a>
+# SchemaGlue &middot;  [![NPM](https://img.shields.io/npm/v/schemaglue.svg?style=flat)](https://www.npmjs.com/package/schemaglue) [![Tests](https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master)](https://travis-ci.org/nicolasdao/schemaglue) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![Neap](https://neap.co/img/made_by_neap.svg)](#this-is-what-we-re-up-to)
 
-# SchemaGlue - Glues Bits and Pieces Of GraphQL Schemas & Resolvers Together
-[![NPM][1]][2] [![Tests][3]][4]
-
-[1]: https://img.shields.io/npm/v/schemaglue.svg?style=flat
-[2]: https://www.npmjs.com/package/schemaglue
-[3]: https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master
-[4]: https://travis-ci.org/nicolasdao/schemaglue
+Glues Bits and Pieces Of GraphQL Schemas & Resolvers Together
 
 # Table Of Contents
 > * [Install](#install)
@@ -477,7 +471,9 @@ exports.resolver = {
 ```
 
 # This Is What We re Up To
+<a href="https://neap.co" target="_blank"><img src="https://neap.co/img/neap_color_horizontal.png" alt="Neap Pty Ltd logo" title="Neap" height="89" width="200" style="float: right" align="right" /></a>
 We are Neap, an Australian Technology consultancy powering the startup ecosystem in Sydney. We simply love building Tech and also meeting new people, so don't hesitate to connect with us at [https://neap.co](https://neap.co).
+
 
 # License
 Copyright (c) 2017, Neap Pty Ltd.
