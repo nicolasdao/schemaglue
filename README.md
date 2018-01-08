@@ -337,7 +337,7 @@ This will take into account all .js files under the folder _./src/graphql_, excl
 // Ignore more than 1 specific .js file
 const { schema:schema1 } = glue('./src/graphql', { ignore: ['**/somefile.js', '**/someotherfile.js'] })
 // Ignore all files under the ./src/graphql/variant folder
-const { schema:schema1 } = glue('./src/graphql', { ignore: 'variant/*' })
+const { schema:schema1 } = glue('./src/graphql', { ignore: 'variant/**' })
 ```
 
 Using the _**appconfig.json**_ file:
