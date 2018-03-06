@@ -1,6 +1,6 @@
 {
   "name": "schemaglue",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Glues multiple parts of a GraphQL schema together(incl. resolvers). This library is designed specifically for building GraphQL schema using Apollo's graphql-tools.js",
   "main": "index.js",
   "scripts": {
