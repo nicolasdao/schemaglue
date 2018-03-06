@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "eslint": "eslint index.js test/ -- fix",
+    "eslint": "eslint index.js test/ src/ --fix",
     "release": "standard-version"
   },
   "keywords": [
@@ -26,12 +26,13 @@
     "url": "https://github.com/nicolasdao/schemaglue.git"
   },
   "dependencies": {
-    "glob": "^7.1.2"
+    "glob": "^7.1.2",
+    "shortid": "^2.2.8"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint": "^4.2.0",
-    "graphql": "^0.11.3",
+    "graphql": "^0.10.0",
     "graphql-tools": "^1.2.2",
     "mocha": "^3.5.0",
     "standard-version": "^4.2.0"

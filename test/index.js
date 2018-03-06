@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Neap Pty Ltd.
+ * Copyright (c) 2018, Neap Pty Ltd.
  * All rights reserved.
  * 
  * This source code is licensed under the BSD-style license found in the
@@ -81,13 +81,84 @@ type Subscription {
   variantNameChanged(id: Int): VariantNameChangedMsg
 }`
 
+const schema_321312_B = `
+type Product {
+  id: ID!
+  name: String!
+  shortDescription: String
+}
+
+type ProductNameChangedMsg {
+  id: ID!
+  name: String
+}
+
+type UpdateMessage {
+  message: String!
+}
+
+type Variant {
+  id: ID!
+  name: String!
+  shortDescription: String
+}
+
+type VariantNameChangedMsg {
+  id: ID!
+  name: String
+}
+
+type Query {
+  # ### GET variants
+  #
+  # _Arguments_
+  # - **id**: Variant's id (optional)
+  variants(id: Int): [Variant]
+
+  # ### GET products
+  #
+  # _Arguments_
+  # - **id**: Product's id (optional)
+  products(id: Int): [Product]
+}
+
+type Mutation {
+  # ### Update a product's name
+  #
+  # _Arguments_
+  # - **id**: Product's id
+  # - **name**: New product's name
+  productUpdateName(id: Int, name: String): UpdateMessage
+
+  # ### Update a variant's name
+  #
+  # _Arguments_
+  # - **id**: Variant's id
+  # - **name**: New variant's name
+  variantUpdateName(id: Int, name: String): UpdateMessage
+}
+
+type Subscription {
+  # ### Listen for product's name changes
+  #
+  # _Arguments_
+  # - **id**: Product's id
+  productNameChanged(id: Int): ProductNameChangedMsg
+
+  # ### Listen for variant's name changes
+  #
+  # _Arguments_
+  # - **id**: Variant's id
+  variantNameChanged(id: Int): VariantNameChangedMsg
+}`
+
 /*eslint-disable */
 describe('glue: BASIC', () => 
 	it(`Should glue all schemas and resolvers resp. into a single schema and resolver object.`, () => {
 		/*eslint-enable */
-		const { schema, resolver } = glue('./test/graphql')
-		//console.log(schema)
-		assert.equal(schema.replace(/\n|\s|\t/g, ''), schema_321312.replace(/\n|\s|\t/g, ''), '')
+		const { schema, resolver } = glue('./test/graphql/mock_01')
+		
+		assert.equal(schema.replace(/\n|\s|\t/g, ''), schema_321312.replace(/\n|\s|\t/g, ''), 'Oops, error in schema')
 		assert.isOk(resolver, 'resolver should exist.')
 		assert.isOk(resolver.Query, 'resolver.Query should exist.')
 		assert.isOk(resolver.Query.products, 'resolver.Query.products should exist.')
@@ -99,9 +170,53 @@ describe('glue: BASIC', () =>
 		assert.isOk(resolver.Subscription.productNameChanged, 'resolver.Subscription.productNameChanged should exist.')
 		assert.isOk(resolver.Subscription.variantNameChanged, 'resolver.Subscription.variantNameChanged should exist.')
 
-		const createExecutableSchema = () => makeExecutableSchema({
+		let createExecutableSchema = () => makeExecutableSchema({
 			typeDefs: schema,
 			resolvers: resolver
+		})
+
+		createExecutableSchema()
+		assert.doesNotThrow(createExecutableSchema, Error, 'createExecutableSchema should have succeeded.')
+
+		const { schema:schema_02, resolver:resolver_02 } = glue('./test/graphql/mock_02')
+    
+		assert.equal(schema_02.replace(/\n|\s|\t/g, ''), schema_321312.replace(/\n|\s|\t/g, ''), 'Oops, error in schema_02')
+		assert.isOk(resolver_02, 'resolver_02 should exist.')
+		assert.isOk(resolver_02.Query, 'resolver_02.Query should exist.')
+		assert.isOk(resolver_02.Query.products, 'resolver_02.Query.products should exist.')
+		assert.isOk(resolver_02.Query.variants, 'resolver_02.Query.variants should exist.')
+		assert.isOk(resolver_02.Mutation, 'resolver_02.Mutation should exist.')
+		assert.isOk(resolver_02.Mutation.productUpdateName, 'resolver_02.Mutation.productUpdateName should exist.')
+		assert.isOk(resolver_02.Mutation.variantUpdateName, 'resolver_02.Mutation.variantUpdateName should exist.')
+		assert.isOk(resolver_02.Subscription, 'resolver_02.Subscription should exist.')
+		assert.isOk(resolver_02.Subscription.productNameChanged, 'resolver_02.Subscription.productNameChanged should exist.')
+		assert.isOk(resolver_02.Subscription.variantNameChanged, 'resolver_02.Subscription.variantNameChanged should exist.')
+
+		createExecutableSchema = () => makeExecutableSchema({
+			typeDefs: schema_02,
+			resolvers: resolver_02
+		})
+
+		createExecutableSchema()
+		assert.doesNotThrow(createExecutableSchema, Error, 'createExecutableSchema should have succeeded.')
+
+		const { schema:schema_03, resolver:resolver_03 } = glue('./test/graphql/mock_03')
+    
+		assert.equal(schema_03.replace(/\n|\s|\t/g, ''), schema_321312_B.replace(/\n|\s|\t/g, ''), 'Oops, error in schema_03')
+		assert.isOk(resolver_03, 'resolver_03 should exist.')
+		assert.isOk(resolver_03.Query, 'resolver_03.Query should exist.')
+		assert.isOk(resolver_03.Query.products, 'resolver_03.Query.products should exist.')
+		assert.isOk(resolver_03.Query.variants, 'resolver_03.Query.variants should exist.')
+		assert.isOk(resolver_03.Mutation, 'resolver_03.Mutation should exist.')
+		assert.isOk(resolver_03.Mutation.productUpdateName, 'resolver_03.Mutation.productUpdateName should exist.')
+		assert.isOk(resolver_03.Mutation.variantUpdateName, 'resolver_03.Mutation.variantUpdateName should exist.')
+		assert.isOk(resolver_03.Subscription, 'resolver_03.Subscription should exist.')
+		assert.isOk(resolver_03.Subscription.productNameChanged, 'resolver_03.Subscription.productNameChanged should exist.')
+		assert.isOk(resolver_03.Subscription.variantNameChanged, 'resolver_03.Subscription.variantNameChanged should exist.')
+
+		createExecutableSchema = () => makeExecutableSchema({
+			typeDefs: schema_03,
+			resolvers: resolver_03
 		})
 
 		createExecutableSchema()
@@ -151,27 +266,27 @@ type Subscription {
 
 /*eslint-disable */
 describe('glue: IGNORE FOLDER', () => 
-  it(`Should ignore a folder while gluing.`, () => {
-    /*eslint-enable */
-    const { schema, resolver } = glue('./test/graphql', { ignore: 'variant/*' })
-    //console.log(schema)
-    assert.equal(schema.replace(/\n|\s|\t/g, ''), schema_cwmkl2.replace(/\n|\s|\t/g, ''), '')
-    assert.isOk(resolver, 'resolver should exist.')
-    assert.isOk(resolver.Query, 'resolver.Query should exist.')
-    assert.isOk(resolver.Query.products, 'resolver.Query.products should exist.')
-    assert.isOk(resolver.Mutation, 'resolver.Mutation should exist.')
-    assert.isOk(resolver.Mutation.productUpdateName, 'resolver.Mutation.productUpdateName should exist.')
-    assert.isOk(resolver.Subscription, 'resolver.Subscription should exist.')
-    assert.isOk(resolver.Subscription.productNameChanged, 'resolver.Subscription.productNameChanged should exist.')
+	it(`Should ignore a folder while gluing.`, () => {
+		/*eslint-enable */
+		const { schema, resolver } = glue('./test/graphql/mock_01', { ignore: 'variant/*' })
+		//console.log(schema)
+		assert.equal(schema.replace(/\n|\s|\t/g, ''), schema_cwmkl2.replace(/\n|\s|\t/g, ''), '')
+		assert.isOk(resolver, 'resolver should exist.')
+		assert.isOk(resolver.Query, 'resolver.Query should exist.')
+		assert.isOk(resolver.Query.products, 'resolver.Query.products should exist.')
+		assert.isOk(resolver.Mutation, 'resolver.Mutation should exist.')
+		assert.isOk(resolver.Mutation.productUpdateName, 'resolver.Mutation.productUpdateName should exist.')
+		assert.isOk(resolver.Subscription, 'resolver.Subscription should exist.')
+		assert.isOk(resolver.Subscription.productNameChanged, 'resolver.Subscription.productNameChanged should exist.')
 
-    const createExecutableSchema = () => makeExecutableSchema({
-      typeDefs: schema,
-      resolvers: resolver
-    })
+		const createExecutableSchema = () => makeExecutableSchema({
+			typeDefs: schema,
+			resolvers: resolver
+		})
 
-    createExecutableSchema()
-    assert.doesNotThrow(createExecutableSchema, Error, 'createExecutableSchema should have succeeded.')
-  }))
+		createExecutableSchema()
+		assert.doesNotThrow(createExecutableSchema, Error, 'createExecutableSchema should have succeeded.')
+	}))
 
 const schema_cec82s = `
 type UpdateMessage {
@@ -242,52 +357,51 @@ type Subscription {
 describe('glue: IGNORE ONE FILE', () => 
   it(`Should ignore a folder while gluing.`, () => {
     /*eslint-enable */
-    const { schema, resolver } = glue('./test/graphql', { ignore: '**/variantquery.js' })
-    //console.log(schema)
-    assert.equal(schema.replace(/\n|\s|\t/g, ''), schema_cec82s.replace(/\n|\s|\t/g, ''), '')
-  }))
+		const { schema } = glue('./test/graphql/mock_01', { ignore: '**/variantquery.js' })
+		assert.equal(schema.replace(/\n|\s|\t/g, ''), schema_cec82s.replace(/\n|\s|\t/g, ''), '')
+	}))
 
 const schema_cec82ws = `
 type UpdateMessage {
-  message: String!
+	message: String!
 }
 
 type Product {
-  id: ID!
-  name: String!
-  shortDescription: String
+	id: ID!
+	name: String!
+	shortDescription: String
 }
 
 type ProductNameChangedMsg {
-  id: ID!
-  name: String
+	id: ID!
+	name: String
 }
 
 type Variant {
-  id: ID!
-  name: String!
-  shortDescription: String
+	id: ID!
+	name: String!
+	shortDescription: String
 }
 
 type VariantNameChangedMsg {
-  id: ID!
-  name: String
+	id: ID!
+	name: String
 }
 
 type Mutation {
-  # ### Update a product's name
-  #
-  # _Arguments_
-  # - **id**: Product's id
-  # - **name**: New product's name
-  productUpdateName(id: Int, name: String): UpdateMessage
+	# ### Update a product's name
+	#
+	# _Arguments_
+	# - **id**: Product's id
+	# - **name**: New product's name
+	productUpdateName(id: Int, name: String): UpdateMessage
 
-  # ### Update a variant's name
-  #
-  # _Arguments_
-  # - **id**: Variant's id
-  # - **name**: New variant's name
-  variantUpdateName(id: Int, name: String): UpdateMessage
+	# ### Update a variant's name
+	#
+	# _Arguments_
+	# - **id**: Variant's id
+	# - **name**: New variant's name
+	variantUpdateName(id: Int, name: String): UpdateMessage
 }
 
 type Subscription {
@@ -308,7 +422,6 @@ type Subscription {
 describe('glue: IGNORE DIFFERENT FILES', () => 
   it(`Should ignore a folder while gluing.`, () => {
     /*eslint-enable */
-    const { schema, resolver } = glue('./test/graphql', { ignore: ['**/productquery.js', '**/variantquery.js'] })
-    //console.log(schema)
-    assert.equal(schema.replace(/\n|\s|\t/g, ''), schema_cec82ws.replace(/\n|\s|\t/g, ''), '')
-  }))
+		const { schema } = glue('./test/graphql/mock_01', { ignore: ['**/productquery.js', '**/variantquery.js'] })
+		assert.equal(schema.replace(/\n|\s|\t/g, ''), schema_cec82ws.replace(/\n|\s|\t/g, ''), '')
+	}))

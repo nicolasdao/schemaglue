@@ -8,11 +8,14 @@
 const path = require('path')
 const fs = require('fs')
 const glob = require('glob')
+const { getSchemaParts } = require('./src/utils')
+
+/*eslint-disable */
+const CWD = process.cwd()
+/*eslint-enable */
 
 const getAppConfig = () => {	
-	/*eslint-disable */
-	const appconfigPath = path.join(process.cwd(), 'appconfig.json')
-	/*eslint-enable */
+	const appconfigPath = path.join(CWD, 'appconfig.json')
 	return fs.existsSync(appconfigPath) ? require(appconfigPath) : null
 }
 
@@ -25,7 +28,8 @@ const glue = (schemaFolderPath, options={}) => {
 		schemaPathInConfig = (graphql || {}).schema
 		ignore = (graphql || {}).ignore
 	}
-	const schemaFolder = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.js')
+	const schemaJsFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.js')
+	const schemaGraphQlFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.graphql')
 	const optionIgnore = options.ignore || ignore
 	const ignored = optionIgnore
 		? typeof(optionIgnore) == 'string'
@@ -33,10 +37,22 @@ const glue = (schemaFolderPath, options={}) => {
 			: optionIgnore.map(i => path.join(schemaFolderPath || schemaPathInConfig || 'schema', i))
 		: undefined
 
-	const files = glob.sync(schemaFolder, { ignore: ignored })
-	/*eslint-disable */
-	const modules = (files || []).map(f => require(path.join(process.cwd(), f)))
-	/*eslint-enable */
+	const jsFiles = glob.sync(schemaJsFiles, { ignore: ignored }) || []
+	const graphqlFiles = glob.sync(schemaGraphQlFiles, { ignore: ignored }) || []
+	const modules = jsFiles.map(f => require(path.join(CWD, f)))
+	modules.push(...graphqlFiles.map(f => {
+		const parts = getSchemaParts(fs.readFileSync(path.join(CWD, f), 'utf8'))
+		if (!parts)
+			return null
+		else
+			return {
+				schema: parts.types ? parts.types.body : null,
+				resolver: null,
+				query: parts.query ? parts.query.body : null,
+				mutation: parts.mutation ? parts.mutation.body : null,
+				subscription: parts.subscription ? parts.subscription.body : null
+			}
+	}).filter(x => x))
 	const gluedSchema = (modules || []).reduce((a, { schema, resolver, query, mutation, subscription }) => {
 		const s = schema && typeof(schema) == 'string' ? (a.schema + '\n' + schema).trim() : a.schema
 		const q = query && typeof(query) == 'string' ? (a.query + '\n' + query).trim() : a.query
@@ -49,17 +65,11 @@ const glue = (schemaFolderPath, options={}) => {
 
 	if (!gluedSchema.schema) {
 		if (schemaPathInConfig)
-			/*eslint-disable */
-			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(process.cwd(), schemaPathInConfig)}' defined in the appconfig.json`)
-			/*eslint-enable */
+			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(CWD, schemaPathInConfig)}' defined in the appconfig.json`)
 		else if (schemaFolderPath)
-			/*eslint-disable */
-			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(process.cwd(), schemaFolderPath)}'`)
-			/*eslint-enable */
+			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(CWD, schemaFolderPath)}'`)
 		else
-			/*eslint-disable */
-			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(process.cwd(), 'schema')}'`)
-			/*eslint-enable */
+			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(CWD, 'schema')}'`)
 	}
 
 	if (gluedSchema.query != 'type Query {') {

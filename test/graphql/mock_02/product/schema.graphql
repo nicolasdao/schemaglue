@@ -1,0 +1,27 @@
+type Product {
+  id: ID!
+  name: String!
+  shortDescription: String
+}
+
+type ProductNameChangedMsg {
+	id: ID!
+	name: String
+}
+
+type Mutation {
+  # ### Update a product's name
+  #
+  # _Arguments_
+  # - **id**: Product's id
+  # - **name**: New product's name
+  productUpdateName(id: Int, name: String): UpdateMessage
+}
+
+type Subscription {
+  # ### Listen for product's name changes
+  #
+  # _Arguments_
+  # - **id**: Product's id
+  productNameChanged(id: Int): ProductNameChangedMsg
+}
