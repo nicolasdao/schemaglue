@@ -1,7 +1,5 @@
 # SchemaGlue &middot;  [![NPM](https://img.shields.io/npm/v/schemaglue.svg?style=flat)](https://www.npmjs.com/package/schemaglue) [![Tests](https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master)](https://travis-ci.org/nicolasdao/schemaglue) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![Neap](https://neap.co/img/made_by_neap.svg)](#this-is-what-we-re-up-to)
-Break down your big monolitic GraphQl schema file (including resolver.js files) into multiple files following the structure that makes sense to you and your team. _**SchemaGlue.js**_ will glue all those files together for you ♥ ʘ‿ʘ.
-
-# Table Of Contents
+Break down your big monolitic GraphQl schema.js file into multiple files following the structure that makes sense to you and your team. _**SchemaGlue.js**_ will glue all those files together for you ♥ ʘ‿ʘ.
 >* [Install](#install)
 >* [How To Use It](#how-to-use-it)
 >   - [In Short](#in-short)
@@ -42,6 +40,9 @@ npm install schemaglue --save
 ```
 
 # How To use It
+
+>NOTICE: All the following examples use [__*webfunc*__](https://github.com/nicolasdao/webfunc) and [__*graphql-serverless*__](https://github.com/nicolasdao/graphql-serverless). _graphql-serverless_ makes developing GraphQl server locally dead easy while _webfunc_ is a serverless web framework that allows to write Express-like server to deploy them on any serverless solution.
+
 ## In Short
 ```js
 const glue = require('schemaglue')
@@ -369,17 +370,17 @@ _resolver.js_
 const { graphqlError } = require('graphql-serverless')
 
 const productMocks = [{ 
-	id: 1,
-	brand: 'Giant',
-	wheels: 2 
+  id: 1,
+  brand: 'Giant',
+  wheels: 2 
 },{ 
-	id: 2,
-	brand: 'Prince',
-	sportType: 'TENNIS' 
+  id: 2,
+  brand: 'Prince',
+  sportType: 'TENNIS' 
 }]
 
 exports.resolver = {
-	Query: {
+  Query: {
     products(root, { id }, context) {
       const results = id ? productMocks.filter(p => p.id == id) : productMocks
       if (results.length > 0)
@@ -389,12 +390,12 @@ exports.resolver = {
     }
   },
 
-	Product: {
-		__resolveType(obj, context, info) {
-			return	obj.wheels ? 'Bicycle' :
-					obj.sportType ? 'Racket' : null
-		}
-	}
+  Product: {
+    __resolveType(obj, context, info) {
+      return  obj.wheels ? 'Bicycle' :
+          obj.sportType ? 'Racket' : null
+    }
+  }
 }
 ```
 > Notice you need to define a _resolveType_ method for the _Product_ type under the _exports.resolver_
