@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/nicolasdao/schemaglue/compare/v1.5.1...v2.0.0) (2018-03-06)
+
+
+### Features
+
+* Add support for '.graphql' files ([7b2b47f](https://github.com/nicolasdao/schemaglue/commit/7b2b47f))
+
+
+
 <a name="1.5.1"></a>
 ## [1.5.1](https://github.com/nicolasdao/schemaglue/compare/v1.5.0...v1.5.1) (2017-10-28)
 
