@@ -88,9 +88,7 @@ const glue = (schemaFolderPath, options={}) => {
 	return { schema: gluedSchema.schema, resolver: gluedSchema.resolver }
 }
 
-module.exports = {
-	glue
-}
+module.exports = glue
 
 
 

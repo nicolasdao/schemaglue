@@ -7,7 +7,7 @@
 */
 const { assert } = require('chai')
 const { makeExecutableSchema } = require('graphql-tools')
-const { glue } = require('../index')
+const glue = require('../index')
 
 
 const schema_321312 = `
