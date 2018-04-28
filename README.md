@@ -112,7 +112,6 @@ const productResolver = {
   Query: {
     products(root, { id }, context) {
       const results = id ? productMocks.filter(p => p.id == id) : productMocks
-      console.log(results)
       if (results.length > 0)
         return results
       else
@@ -222,7 +221,6 @@ exports.resolver = {
   Query: {
     products(root, { id }, context) {
       const results = id ? productMocks.filter(p => p.id == id) : productMocks
-      console.log(results)
       if (results.length > 0)
         return results
       else
