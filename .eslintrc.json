@@ -5,6 +5,10 @@
         "es6": true
     },
     "extends": "eslint:recommended",
+    "globals": {
+        "describe": false,
+        "it": false
+    },
     "parserOptions": {
         "sourceType": "module"
     },

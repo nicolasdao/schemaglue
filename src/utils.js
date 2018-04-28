@@ -103,7 +103,7 @@ const getSchemaParts = schema => {
 		{ key: 'types' }]
 		.reduce((acc, v) => {
 			if (v.key == 'types') {
-				const raw = acc.schema.replace(/^\n*|\n*$/g, '')
+				const raw = replaceTokens(acc.schema.replace(/^\n*|\n*$/g, ''), tokens)
 				acc.result.types = { raw, body: raw }
 			}
 			else {
