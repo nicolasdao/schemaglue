@@ -298,6 +298,12 @@ eval(app.listen('app', 4000))
 
 Simply run `node index.js` and then browse to [http://localhost:4000/graphiql](http://localhost:4000/graphiql).
 
+## Using Typescript
+In order to use typescript with schemaglue, pass the `typescript` option. This defaults to `false`.
+```js
+const { schema, resolver } = glue('./src/graphql', { typescript: true })
+```
+
 ## Ignoring Certain Files
 In some cases, you might want to ignore some specific files under the schema folder (by default, SchemaGlue will take into account all .js files). SchemaGlue adds support to ignore files or folders using [globbing](https://github.com/isaacs/node-glob):
 ```js
