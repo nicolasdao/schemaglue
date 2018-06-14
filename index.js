@@ -28,7 +28,8 @@ const glue = (schemaFolderPath, options={}) => {
 		schemaPathInConfig = (graphql || {}).schema
 		ignore = (graphql || {}).ignore
 	}
-	const schemaJsFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.js')
+	const globFiles = options.typescript ? '**/*.ts' : '**/*.js';
+	const schemaJsFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', globFiles);
 	const schemaGraphQlFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.graphql')
 	const optionIgnore = options.ignore || ignore
 	const ignored = optionIgnore
