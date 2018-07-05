@@ -22,13 +22,14 @@ const getAppConfig = () => {
 const glue = (schemaFolderPath, options={}) => {
 	let schemaPathInConfig = null
 	let ignore = null
+	let jsGlob = options.js || '**/*.js'
 	if (!schemaFolderPath) {
 		const appconfig = getAppConfig()
 		const graphql = (appconfig || {}).graphql
 		schemaPathInConfig = (graphql || {}).schema
 		ignore = (graphql || {}).ignore
 	}
-	const schemaJsFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.js')
+	const schemaJsFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', jsGlob)
 	const schemaGraphQlFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.graphql')
 	const optionIgnore = options.ignore || ignore
 	const ignored = optionIgnore
