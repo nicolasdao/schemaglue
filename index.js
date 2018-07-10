@@ -19,17 +19,31 @@ const getAppConfig = () => {
 	return fs.existsSync(appconfigPath) ? require(appconfigPath) : null
 }
 
+
+// [description]
+// @param  {String} 		schemaFolderPath 	Path to the root folder containing the schema.graphql and resolver files.
+// @param  {Object} 		options          	Options object.
+// @param  {String|Array} 	options.ignore      Defines globbing patterns to ignore certain files or folders (e.g., ignore: ['**/productquery.js', '**/variantquery.js'], ignore: ignore: 'variant/*').
+// @param  {String} 		options.mode 		Defines whether the GraphQL resolvers are defined using standard javascript files, typescript files or a custom globbing pattern. 
+// 												Valid values: 'js', 'ts', '<globbing pattern>'	
+// @return {Object}         result
+// @return {String}         result.schema 		Aggregated string made of all the schemas defined in the various .graphql files under folder located at 'schemaFolderPath'
+// @return {Object}         result.resolve   	Aggregated object made of all the resolvers defined in the various .graphql files under folder located at 'schemaFolderPath'
+//
 const glue = (schemaFolderPath, options={}) => {
 	let schemaPathInConfig = null
 	let ignore = null
-	let jsGlob = options.js || '**/*.js'
+	let resolverFileGlob = 
+		!options.mode || options.mode == 'js' ? '**/*.js' :
+			options.mode == 'ts' ? '**/*.ts' : options.mode
+
 	if (!schemaFolderPath) {
 		const appconfig = getAppConfig()
 		const graphql = (appconfig || {}).graphql
 		schemaPathInConfig = (graphql || {}).schema
 		ignore = (graphql || {}).ignore
 	}
-	const schemaJsFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', jsGlob)
+	const resolverFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', resolverFileGlob)
 	const schemaGraphQlFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.graphql')
 	const optionIgnore = options.ignore || ignore
 	const ignored = optionIgnore
@@ -38,7 +52,7 @@ const glue = (schemaFolderPath, options={}) => {
 			: optionIgnore.map(i => path.join(schemaFolderPath || schemaPathInConfig || 'schema', i))
 		: undefined
 
-	const jsFiles = glob.sync(schemaJsFiles, { ignore: ignored }) || []
+	const jsFiles = glob.sync(resolverFiles, { ignore: ignored }) || []
 	const graphqlFiles = glob.sync(schemaGraphQlFiles, { ignore: ignored }) || []
 	const modules = jsFiles.map(f => require(path.join(CWD, f)))
 	modules.push(...graphqlFiles.map(f => {

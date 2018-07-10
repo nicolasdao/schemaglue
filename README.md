@@ -3,6 +3,7 @@ Break down your big monolitic GraphQl schema.js file into multiple files followi
 >* [Install](#install)
 >* [How To Use It](#how-to-use-it)
 >   - [In Short](#in-short)
+>   - [Typescript Support & Custom Globbing](#typescript-support--custom-globbing)
 >   - [Ignoring Certain Files](#ignoring-certain-files)
 >   - [Interesting Examples](#interesting-examples)
 >* [Pull-Requests & Contribution](#contribute)
@@ -299,6 +300,23 @@ eval(app.listen('app', 4000))
 ```
 
 Simply run `node index.js` and then browse to [http://localhost:4000/graphiql](http://localhost:4000/graphiql).
+
+## Typescript Support & Custom Globbing
+
+By default, schemaglue uses .js files to define resolvers and .graphql files to define schemas. If your project uses Typescript, it is possible to change the default behavior to target resolvers that use .ts files:
+
+```js
+const { schema, resolver } = glue('src/graphql', { mode: 'ts' })
+```
+
+You can go even further by defining your own custom globbing rule if you want to only include certain resolver files:
+
+```js
+const { schema, resolver } = glue('src/graphql', { mode: 'product/*.js' })
+```
+
+The above will only get resolvers defined under the `src/graphql/product/` folder.
+
 
 ## Ignoring Certain Files
 In some cases, you might want to ignore some specific files under the schema folder (by default, SchemaGlue will take into account all .js files). SchemaGlue adds support to ignore files or folders using [globbing](https://github.com/isaacs/node-glob):
