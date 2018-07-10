@@ -407,9 +407,15 @@ describe('glue', () => {
     }`
 		const { schema } = glue('./test/graphql/mock_01', { ignore: ['**/productquery.js', '**/variantquery.js'] })
 		assert.equal(schema.replace(/\n|\s|\t/g, ''), schema_cec82ws.replace(/\n|\s|\t/g, ''), '')
+  })
+  it('#5 CUSTOM GLOB FOR JS FILES - Should support custom file extensions for resolvers.', () => {
+		const { resolver } = glue('./test/graphql/mock_05', { js: '**/*.ts' })
+		assert.isOk(resolver, 'resolver should exist.')
+		assert.isOk(resolver.Query, 'resolver.Query should exist.')
+		assert.isOk(resolver.Query.products, 'resolver.Query.products should exist.')
 	})
 
-	it('#5 COMMENTS - Should be able to manage comments in the schema root.', () => {
+	it('#6 COMMENTS - Should be able to manage comments in the schema root.', () => {
 		const schemaStr = `
     type Product {
       id: ID!

@@ -52,6 +52,7 @@ const glue = require('schemaglue')
 // bits and pieces of the GraphQL schema and resolver that schemaglue will
 // reassemble into a single 'schema' string and 'resolver' object.
 const options = {
+	js: '**/*.js', // default
 	ignore: '**/somefileyoudonotwant.js'
 }
 const { schema, resolver } = glue('src/graphql', options)
@@ -309,6 +310,12 @@ This will take into account all .js files under the folder _./src/graphql_, excl
 const { schema:schema1 } = glue('./src/graphql', { ignore: ['**/somefile.js', '**/someotherfile.js'] })
 // Ignore all files under the ./src/graphql/variant folder
 const { schema:schema1 } = glue('./src/graphql', { ignore: 'variant/**' })
+```
+
+## Custom Extensions
+You can specify a custom glob to select your resolver files with different extensions.
+```js
+const { schema, resolver } = glue('./src/graphql', { js: '**/*.ts' })
 ```
 
 ## Interesting Examples
