@@ -5,6 +5,7 @@ Break down your big monolitic GraphQl schema.js file into multiple files followi
 >   - [In Short](#in-short)
 >   - [Ignoring Certain Files](#ignoring-certain-files)
 >   - [Interesting Examples](#interesting-examples)
+>* [Pull-Requests & Contribution](#contribute)
 >* [About Us](#this-is-what-we-re-up-to)
   
 # What It Does
@@ -404,6 +405,25 @@ exports.resolver = {
 }
 ```
 > Notice you need to define a _resolveType_ method for the _Product_ type under the _exports.resolver_
+
+# Contribute
+## General Guidance
+We're always super excited to accept pull-requests. We're not too nazi on how you implement your fixes or desired features, but we would still highly appreciate if you could:
+
+1. Lint your code using the command `npm run eslint` before pushing your pull-request.
+2. Make sure you've added a unit test under the `test` folder (more about that in the following section).
+3. Make sure all the unit tests pass by running `npm test`
+
+### THANKS A LOT YOU AWESOME GOD COMMITTER!
+
+## Unit Testing
+All unit tests are located under the `test` folder. There, you will notice 3 main components:
+
+1. `graphql` folder: This folder contains a series of mock files that you should use to test schemaglue. Feel free to add your own, but please, stick to the already defined naming convention.
+2. `index.js`: This file is the main unit test file. You will most probably add your unit test there. Please, stick with the naming convention in that file.
+3. `utils.js`: This file contains the unit tests for the src/utils.js code. Please, stick with the naming convention in that file.
+
+To run the test, simply execute this command: `npm test`.
 
 # This Is What We re Up To
 We are Neap, an Australian Technology consultancy powering the startup ecosystem in Sydney. We simply love building Tech and also meeting new people, so don't hesitate to connect with us at [https://neap.co](https://neap.co).
