@@ -1,0 +1,7 @@
+type Query {
+  # ### GET products
+  #
+  # _Arguments_
+  # - **id**: Product's id (optional)
+  products(id: Int): [Product]
+}
