@@ -26,6 +26,7 @@ const getAppConfig = () => {
 // @param  {String|Array} 	options.ignore      Defines globbing patterns to ignore certain files or folders (e.g., ignore: ['**/productquery.js', '**/variantquery.js'], ignore: ignore: 'variant/*').
 // @param  {String} 		options.mode 		Defines whether the GraphQL resolvers are defined using standard javascript files, typescript files or a custom globbing pattern. 
 // 												Valid values: 'js', 'ts', '<globbing pattern>'	
+// @param  {any}    		options.context    	Passed in as the argument to resolvers exported as functions (e.g. { context: { databaseConnection } }).
 // @return {Object}         result
 // @return {String}         result.schema 		Aggregated string made of all the schemas defined in the various .graphql files under folder located at 'schemaFolderPath'
 // @return {Object}         result.resolve   	Aggregated object made of all the resolvers defined in the various .graphql files under folder located at 'schemaFolderPath'
@@ -73,8 +74,10 @@ const glue = (schemaFolderPath, options={}) => {
 		const q = query && typeof(query) == 'string' ? (a.query + '\n' + query).trim() : a.query
 		const m = mutation && typeof(mutation) == 'string' ? (a.mutation + '\n' + mutation).trim() : a.mutation
 		const sub = subscription && typeof(subscription) == 'string' ? (a.subscription + '\n' + subscription).trim() : a.subscription
-		for(let key in resolver) 
-			a.resolver[key] = Object.assign((a.resolver[key] || {}), (resolver[key] || {}))
+		const expandedResolver = typeof(resolver) == 'function' ? resolver(options.context) : resolver
+
+		for(let key in expandedResolver)
+			a.resolver[key] = Object.assign((a.resolver[key] || {}), (expandedResolver[key] || {}))
 		return { schema: s, resolver: a.resolver, query: q, mutation: m, subscription: sub } 
 	}, { schema: '', resolver: {}, query: 'type Query {', mutation: 'type Mutation {', subscription: 'type Subscription {' })
 

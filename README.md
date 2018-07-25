@@ -5,6 +5,7 @@ Break down your big monolitic GraphQl schema.js file into multiple files followi
 >   - [In Short](#in-short)
 >   - [Typescript Support & Custom Globbing](#typescript-support--custom-globbing)
 >   - [Ignoring Certain Files](#ignoring-certain-files)
+>   - [Using Functional Dependency Injection Inside Resolvers](#using-functional-dependency-injection-inside-resolvers)
 >   - [Interesting Examples](#interesting-examples)
 >* [Pull-Requests & Contribution](#contribute)
 >* [About Us](#this-is-what-we-re-up-to)
@@ -55,7 +56,8 @@ const glue = require('schemaglue')
 // reassemble into a single 'schema' string and 'resolver' object.
 const options = {
 	js: '**/*.js', // default
-	ignore: '**/somefileyoudonotwant.js'
+	ignore: '**/somefileyoudonotwant.js',
+	context: { dependencyA, dependencyB } // Passed into resolvers that are exported as functions
 }
 const { schema, resolver } = glue('src/graphql', options)
 ```
@@ -335,6 +337,62 @@ const { schema:schema1 } = glue('./src/graphql', { ignore: 'variant/**' })
 You can specify a custom glob to select your resolver files with different extensions.
 ```js
 const { schema, resolver } = glue('./src/graphql', { js: '**/*.ts' })
+```
+
+## Using Functional Dependency Injection Inside Resolvers
+
+To facilitate functional dependency injection, resolvers can be exported as functions with a single `context` argument. When glueing everything together using `glue('src/graphql', options)`, `options.context` gets passed into each resolver's `context` argument. `context` is best used as a hash of dependencies. This pattern facilitates the unit testing of resolvers by allowing dependencies to be easily mocked.
+
+Basic example passing in raw data:
+
+```js
+// app.js
+const productMocks = [
+  { id: 1, name: 'Product 1', shortDescription: 'Product #1.' }, 
+  { id: 2, name: 'Product 2', shortDescription: 'Product #2.' }
+]
+const { schema, resolver } = glue('src/graphql', { context: { productMocks } })
+    
+// src/graphql/product/resolver.js
+exports.resolver = context => {
+  return {
+    Query: {
+      products(root, { id }) {
+        const { productMocks } = context
+        const results = id ? productMocks.filter(p => p.id == id) : productMocks
+        return results ||  null
+      }
+    }
+  }
+}
+```
+
+Advanced example passing in a curried function that encapsulates the shared database connection. This makes testing resolvers incredibly easy:
+
+```js
+// app.js
+const sharedDatabaseConnection = ...
+const GetProducts = ProductsService.GetProducts({ db: sharedDatabaseConnection }) // curried function so we don't have to pass the shared database connection around
+const { schema, resolver } = glue('src/graphql', { context: { GetProducts } })
+
+// src/graphql/product/resolver.js
+exports.resolver = context => {
+  return {
+    Query: {
+      products(root, { id }) {
+        const { GetProducts } = context
+        return GetProducts(id) // resolver has no direct reference to the shared database connection
+      }
+    }
+  }
+}
+
+// test/graphql/product/resolver-test.js
+it('returns the correct products for a given id', () => {
+  const GetProducts = id => ([{ id: id, name: 'Special product', shortDescription: 'My special product mock.' }])
+  const { resolver } = glue('src/graphql', { context: { GetProducts } })
+  assert.deepEqual(resolver.Query.products(null, { id: 1 }), [{ id: 1, name: 'Special product', shortDescription: 'My special product mock.' }])
+})
 ```
 
 ## Interesting Examples

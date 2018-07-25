@@ -503,4 +503,29 @@ describe('glue', () => {
 		assert.isOk(resolver.Query.products, 'resolver.Query.products should exist.')
 		assert.isOk(!resolver.Query.variants, 'resolver.Query.variants should not exist.')
 	})
+	it('#8 CONTEXT SUPPORT - Should support resolvers that are functions by passing in options.context.', () => {
+		const GetProducts = id => ([{ id: id, name: 'Special product', shortDescription: 'My special product mock.' }])
+		const { schema, resolver } = glue('./test/graphql/mock_07', { context: { GetProducts } })
+		
+		assert.isOk(resolver, 'resolver should exist.')
+		assert.isOk(resolver.Query, 'resolver.Query should exist.')
+		assert.isOk(resolver.Query.products, 'resolver.Query.products should exist.')
+		assert.isOk(resolver.Query.variants, 'resolver.Query.variants should exist.')
+		assert.isOk(resolver.Mutation, 'resolver.Mutation should exist.')
+		assert.isOk(resolver.Mutation.productUpdateName, 'resolver.Mutation.productUpdateName should exist.')
+		assert.isOk(resolver.Mutation.variantUpdateName, 'resolver.Mutation.variantUpdateName should exist.')
+		assert.isOk(resolver.Subscription, 'resolver.Subscription should exist.')
+		assert.isOk(resolver.Subscription.productNameChanged, 'resolver.Subscription.productNameChanged should exist.')
+		assert.isOk(resolver.Subscription.variantNameChanged, 'resolver.Subscription.variantNameChanged should exist.')
+
+		let createExecutableSchema = () => makeExecutableSchema({
+			typeDefs: schema,
+			resolvers: resolver
+		})
+
+		createExecutableSchema()
+		assert.doesNotThrow(createExecutableSchema, Error, 'createExecutableSchema should have succeeded.')
+
+		assert.deepEqual(resolver.Query.products(null, { id: 1 }), [{ id: 1, name: 'Special product', shortDescription: 'My special product mock.' }], 'resolver.Query.products should be able to use the context')
+	})
 })
