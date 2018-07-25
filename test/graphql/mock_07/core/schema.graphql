@@ -1,0 +1,4 @@
+# This is a message
+type UpdateMessage {
+	message: String!
+}
