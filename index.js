@@ -44,7 +44,7 @@ const glue = (schemaFolderPath, options={}) => {
 		ignore = (graphql || {}).ignore
 	}
 	const resolverFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', resolverFileGlob)
-	const schemaGraphQlFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.graphql')
+	const schemaGraphQlFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.{graphql,gql}')
 	const optionIgnore = options.ignore || ignore
 	const ignored = optionIgnore
 		? typeof(optionIgnore) == 'string'
