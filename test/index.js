@@ -503,4 +503,86 @@ describe('glue', () => {
 		assert.isOk(resolver.Query.products, 'resolver.Query.products should exist.')
 		assert.isOk(!resolver.Query.variants, 'resolver.Query.variants should not exist.')
 	})
+  it('#8 SUPPORT .gql FILES - Should be glue .gql files.', () => {
+    const schemaStr = `
+    type Product {
+      id: ID!
+      name: String!
+      shortDescription: String
+    }
+
+    type ProductNameChangedMsg {
+      id: ID!
+      name: String
+    }
+    # This is a message
+    type UpdateMessage {
+      message: String!
+    }
+    # This is
+    # a
+    # Variant
+    type Variant {
+      id: ID!
+      name: String!
+      shortDescription: String
+    }
+
+    type VariantNameChangedMsg {
+      id: ID!
+      name: String
+    }
+    type Query {
+
+      # ### GET variants
+      #
+      # _Arguments_
+      # - **id**: Variant's id (optional)
+      variants(id: Int): [Variant]
+
+      # ### GET products
+      #
+      # _Arguments_
+      # - **id**: Product's id (optional)
+      products(id: Int): [Product]
+
+      # ### GET products
+      #
+      # _Arguments_
+      # - **id**: Product's id (optional)
+      variants(id: Int): [Variant]
+    }
+    type Mutation {
+
+      # ### Update a product's name
+      #
+      # _Arguments_
+      # - **id**: Product's id
+      # - **name**: New product's name
+      productUpdateName(id: Int, name: String): UpdateMessage
+
+      # ### Update a variant's name
+      #
+      # _Arguments_
+      # - **id**: Variant's id
+      # - **name**: New variant's name
+      variantUpdateName(id: Int, name: String): UpdateMessage
+    }
+    type Subscription {
+
+      # ### Listen for product's name changes
+      #
+      # _Arguments_
+      # - **id**: Product's id
+      productNameChanged(id: Int): ProductNameChangedMsg
+
+      # ### Listen for variant's name changes
+      #
+      # _Arguments_
+      # - **id**: Variant's id
+      variantNameChanged(id: Int): VariantNameChangedMsg
+    }`
+    const { schema } = glue('./test/graphql/mock_07')
+    assert.equal(schema.replace(/\n|\s|\t/g, ''), schemaStr.replace(/\n|\s|\t/g, ''), '')
+  })
 })
