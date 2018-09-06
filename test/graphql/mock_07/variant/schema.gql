@@ -1,0 +1,38 @@
+# This is 
+# a
+# Variant
+type Variant {
+  id: ID!
+  name: String!
+  shortDescription: String
+}
+
+type VariantNameChangedMsg {
+	id: ID!
+	name: String
+}
+
+type Query {
+  # ### GET products
+  #
+  # _Arguments_
+  # - **id**: Product's id (optional)
+  variants(id: Int): [Variant]
+}
+
+type Mutation {
+  # ### Update a variant's name
+  #
+  # _Arguments_
+  # - **id**: Variant's id
+  # - **name**: New variant's name
+  variantUpdateName(id: Int, name: String): UpdateMessage
+}
+
+type Subscription {
+  # ### Listen for variant's name changes
+  #
+  # _Arguments_
+  # - **id**: Variant's id
+  variantNameChanged(id: Int): VariantNameChangedMsg
+}
