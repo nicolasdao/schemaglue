@@ -3,6 +3,7 @@
   "version": "4.0.6",
   "description": "Glues multiple parts of a GraphQL schema together(incl. resolvers). This library is designed specifically for building GraphQL schema using Apollo's graphql-tools.js",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "mocha",
     "lint": "eslint index.js test/ src/ --fix",
