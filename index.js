@@ -43,20 +43,22 @@ const glue = (schemaFolderPath, options={}) => {
 		schemaPathInConfig = (graphql || {}).schema
 		ignore = (graphql || {}).ignore
 	}
-	const resolverFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', resolverFileGlob)
-	const schemaGraphQlFiles = path.join(schemaFolderPath || schemaPathInConfig || 'schema', '**/*.{graphql,gql}')
+
+	const schemaFolderAbsPath = path.resolve(schemaFolderPath || schemaPathInConfig || 'schema')
+	const resolverFiles = path.join(schemaFolderAbsPath, resolverFileGlob)
+	const schemaGraphQlFiles = path.join(schemaFolderAbsPath, '**/*.{graphql,gql}')
 	const optionIgnore = options.ignore || ignore
 	const ignored = optionIgnore
 		? typeof(optionIgnore) == 'string'
-			? path.join(schemaFolderPath || schemaPathInConfig || 'schema', optionIgnore) 
-			: optionIgnore.map(i => path.join(schemaFolderPath || schemaPathInConfig || 'schema', i))
+			? path.join(schemaFolderAbsPath, optionIgnore) 
+			: optionIgnore.map(i => path.join(schemaFolderAbsPath, i))
 		: undefined
 
 	const jsFiles = glob.sync(resolverFiles, { ignore: ignored }) || []
 	const graphqlFiles = glob.sync(schemaGraphQlFiles, { ignore: ignored }) || []
-	const modules = jsFiles.map(f => require(path.join(CWD, f)))
+	const modules = jsFiles.map(f => require(f))
 	modules.push(...graphqlFiles.map(f => {
-		const parts = getSchemaParts(fs.readFileSync(path.join(CWD, f), 'utf8'))
+		const parts = getSchemaParts(fs.readFileSync(f, 'utf8'))
 		if (!parts)
 			return null
 		else
@@ -80,11 +82,11 @@ const glue = (schemaFolderPath, options={}) => {
 
 	if (!gluedSchema.schema) {
 		if (schemaPathInConfig)
-			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(CWD, schemaPathInConfig)}' defined in the appconfig.json`)
+			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.resolve(schemaPathInConfig)}' defined in the appconfig.json`)
 		else if (schemaFolderPath)
-			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(CWD, schemaFolderPath)}'`)
+			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.resolve(schemaFolderPath)}'`)
 		else
-			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.join(CWD, 'schema')}'`)
+			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.resolve('schema')}'`)
 	}
 
 	if (gluedSchema.query != 'type Query {') {

@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "eslint": "eslint index.js test/ src/ --fix",
-    "release": "standard-version"
+    "lint": "eslint index.js test/ src/ --fix",
+    "push": "git push --follow-tags origin master && npm publish",
+    "rls": "standard-version --release-as",
+    "v": "node -e \"console.log(require('./package.json').version)\""
   },
   "keywords": [
     "graphql",

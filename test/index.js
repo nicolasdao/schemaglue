@@ -503,8 +503,8 @@ describe('glue', () => {
 		assert.isOk(resolver.Query.products, 'resolver.Query.products should exist.')
 		assert.isOk(!resolver.Query.variants, 'resolver.Query.variants should not exist.')
 	})
-  it('#8 SUPPORT .gql FILES - Should be glue .gql files.', () => {
-    const schemaStr = `
+	it('#8 SUPPORT .gql FILES - Should be glue .gql files.', () => {
+		const schemaStr = `
     type Product {
       id: ID!
       name: String!
@@ -582,7 +582,7 @@ describe('glue', () => {
       # - **id**: Variant's id
       variantNameChanged(id: Int): VariantNameChangedMsg
     }`
-    const { schema } = glue('./test/graphql/mock_07')
-    assert.equal(schema.replace(/\n|\s|\t/g, ''), schemaStr.replace(/\n|\s|\t/g, ''), '')
-  })
+		const { schema } = glue('./test/graphql/mock_07')
+		assert.equal(schema.replace(/\n|\s|\t/g, ''), schemaStr.replace(/\n|\s|\t/g, ''), '')
+	})
 })
