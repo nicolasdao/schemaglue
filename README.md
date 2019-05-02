@@ -150,7 +150,8 @@ module.exports = {
 // index.js
 
 const { graphqlHandler } = require('graphql-serverless')
-const { app } = require('webfunc')
+const express = require('express')
+const app = express()
 const { executableSchema } = require('./src/schema')
 
 const graphqlOptions = {
@@ -166,7 +167,7 @@ const graphqlOptions = {
 app.all(['/', '/graphiql'], graphqlHandler(graphqlOptions))
 
 // Starting the server 
-eval(app.listen('app', 4000))
+app.listen(4000, () => console.log('Server start. Go to http://localhost:4000/graphiql'))
 ```
 
 Simply run `node index.js` and then browse to [http://localhost:4000/graphiql](http://localhost:4000/graphiql).
@@ -174,7 +175,7 @@ Simply run `node index.js` and then browse to [http://localhost:4000/graphiql](h
 ### With SchemaGlue
 >PREREQUISITE - Install the following dependencies before running the following code:
 >
-> `npm install webfunc graphql-serverless schemaglue lodash --save`
+> `npm i express graphql-serverless schemaglue lodash --save`
 >
 
 _Project Structure Example_
@@ -275,8 +276,9 @@ exports.resolver = {
 // index.js
 
 const { graphqlHandler } = require('graphql-serverless')
-const { app } = require('webfunc')
-const { makeExecutableSchema } = require('graphql-tools') 
+const express = require('express')
+const app = express()
+const { makeExecutableSchema } = require('graphql-tools')
 const glue = require('schemaglue')
 
 const { schema, resolver } = glue('src/graphql')
@@ -288,15 +290,18 @@ const executableSchema = makeExecutableSchema({
 
 const graphqlOptions = {
   schema: executableSchema,
-  graphiql: { 
+  graphiql: { // If you do not want to host any GraphiQl web interface, leave this property undefined.
     endpoint: '/graphiql' 
   }
 }
 
+// Host a GraphQl API on 2 endpoints: '/' and '/graphiql'. '/graphiql' is used to host the GraphiQL web interface.
+// If you're not interested in the GraphiQl web interface, leave the above 'graphqlOptions.graphiql' undefined and 
+// replace the path following ['/', '/graphiql'] with '/'.
 app.all(['/', '/graphiql'], graphqlHandler(graphqlOptions))
 
-
-eval(app.listen('app', 4000))
+// Starting the server 
+app.listen(4000, () => console.log('Server start. Go to http://localhost:4000/graphiql'))
 ```
 
 Simply run `node index.js` and then browse to [http://localhost:4000/graphiql](http://localhost:4000/graphiql).
