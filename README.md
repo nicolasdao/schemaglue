@@ -431,13 +431,13 @@ exports.resolver = {
 
 # Contribute
 ## General Guidance
-We're always super excited to accept pull-requests. We're not too nazi on how you implement your fixes or desired features, but we would still highly appreciate if you could:
+We're always super excited to accept pull-requests. We're not too strict about how you implement your fixes or desired features, but we would still highly appreciate if you could:
 
 1. Lint your code using the command `npm run eslint` before pushing your pull-request.
 2. Make sure you've added a unit test under the `test` folder (more about that in the following section).
 3. Make sure all the unit tests pass by running `npm test`
 
-### THANKS A LOT YOU AWESOME GOD COMMITTER!
+### THANKS A LOT YOU AWESOME CONTRIBUTOR!
 
 ## Unit Testing
 All unit tests are located under the `test` folder. There, you will notice 3 main components:
