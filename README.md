@@ -6,6 +6,8 @@ Break down your big monolitic GraphQl schema.js file into multiple files followi
 >   - [Typescript Support & Custom Globbing](#typescript-support--custom-globbing)
 >   - [Ignoring Certain Files](#ignoring-certain-files)
 >   - [Interesting Examples](#interesting-examples)
+>   - [Replacing `.graphql` files with plain `.js` or `.ts` files](#replacing-graphql-files-with-plain-js-or-ts-files)
+>* [Typescript support](#typescript-support)
 >* [Pull-Requests & Contribution](#contribute)
 >* [About Us](#this-is-what-we-re-up-to)
   
@@ -423,6 +425,91 @@ exports.resolver = {
 }
 ```
 > Notice you need to define a _resolveType_ method for the _Product_ type under the _exports.resolver_
+
+## Replacing `.graphql` files with plain `.js` or `.ts` files
+
+There are some edge cases where some software engineers may want to express their GraphQL schema using `.js` or `.ts` files rather than `.graphql` files (e.g., [Typescript support](#typescript-support)). 
+
+In that case, you will have to transform your files as follow:
+
+__`product.graphql` example:__ 
+
+```graphql
+type Product {
+  id: ID!
+  name: String!
+  shortDescription: String
+}
+
+type ProductNameChangedMsg {
+  id: ID!
+  name: String
+}
+
+type Query {
+  products(id: Int): [Product]
+}
+
+type Mutation {
+  productUpdateName(id: Int, name: String): ProductNameChangedMsg
+}
+
+type Subscription {
+  productNameChanged(id: Int): ProductNameChangedMsg
+}
+```
+
+__`product.js` example:__ 
+
+```js
+exports.schema = `
+type Product {
+  id: ID!
+  name: String!
+  shortDescription: String
+}
+
+type ProductNameChangedMsg {
+  id: ID!
+  name: String
+}
+`
+
+exports.query = `
+  products(id: Int): [Product]
+`
+
+exports.mutation = `
+  productUpdateName(id: Int, name: String): ProductNameChangedMsg
+`
+
+exports.subscription = `
+  productNameChanged(id: Int): ProductNameChangedMsg
+`
+```
+
+# Typescript support
+
+As explained in the [Typescript Support & Custom Globbing](#typescript-support--custom-globbing) section, Schemaglue supports resolvers written in Typescript. However, Typescript is less than friendly with the `.graphql` file extension. The main challenge occurs when the Typescript code is compiled (for example into a `dist` folder). You'll notice that the `.graphql` files are omitted, therefore breaking your code in production. This article explains how to use Webpack to include those `.graphql` files: [How to resolve import for the .graphql file with typescript and webpack](https://dev.to/open-graphql/how-to-resolve-import-for-the-graphql-file-with-typescript-and-webpack-35lf).
+
+However, for those of you who do not wish to mess up with more Webpack configuration, there is a solution with a trade-off. Schemaglue supports GraphQL schema file written in plain JS or TS as explained in the [Replacing `.graphql` files with plain `.js` or `.ts` files](#replacing-graphql-files-with-plain-js-or-ts-files) section. You will loose in readability as your GraphQL schema will have to be expressed as raw Javascript strings. To make this work, update the your code as follow:
+
+Before:
+
+```js
+const { schema, resolver } = glue('src/graphql', { mode:'ts' })
+```
+
+After:
+
+```js
+const { schema, resolver } = glue('src/graphql', { mode:'**/*.[jt]s' })
+```
+
+This example above helps reading `.ts` files and `.js` files at the same time. This is required as your `.ts` files are compiled to `.js` files in your `dist` folder. 
+
+
+If you choose that convention, the GraphQL schema will be properly exported to your `dist` folder.
 
 # Contribute
 ## General Guidance
