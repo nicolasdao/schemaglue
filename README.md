@@ -1,4 +1,4 @@
-# SchemaGlue &middot;  [![NPM](https://img.shields.io/npm/v/schemaglue.svg?style=flat)](https://www.npmjs.com/package/schemaglue) [![Tests](https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master)](https://travis-ci.org/nicolasdao/schemaglue) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![Neap](https://neap.co/img/made_by_neap.svg)](#this-is-what-we-re-up-to)
+# SchemaGlue &middot;  [![NPM](https://img.shields.io/npm/v/schemaglue.svg?style=flat)](https://www.npmjs.com/package/schemaglue) [![Tests](https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master)](https://travis-ci.org/nicolasdao/schemaglue) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![Neap](https://neap.co/img/made_by_neap.svg)](#this-is-what-we-re-up-to) [![npm downloads](https://img.shields.io/npm/dt/schemaglue.svg?style=flat)](https://www.npmjs.com/package/schemaglue)
 Break down your big monolitic GraphQl schema.js file into multiple files following the structure that makes sense to you and your team. _**SchemaGlue.js**_ will glue all those files together for you ♥ ʘ‿ʘ.
 >* [Install](#install)
 >* [How To Use It](#how-to-use-it)
@@ -152,7 +152,8 @@ module.exports = {
 // index.js
 
 const { graphqlHandler } = require('graphql-serverless')
-const { app } = require('webfunc')
+const express = require('express')
+const app = express()
 const { executableSchema } = require('./src/schema')
 
 const graphqlOptions = {
@@ -168,7 +169,7 @@ const graphqlOptions = {
 app.all(['/', '/graphiql'], graphqlHandler(graphqlOptions))
 
 // Starting the server 
-eval(app.listen('app', 4000))
+app.listen(4000, () => console.log('Server start. Go to http://localhost:4000/graphiql'))
 ```
 
 Simply run `node index.js` and then browse to [http://localhost:4000/graphiql](http://localhost:4000/graphiql).
@@ -176,7 +177,7 @@ Simply run `node index.js` and then browse to [http://localhost:4000/graphiql](h
 ### With SchemaGlue
 >PREREQUISITE - Install the following dependencies before running the following code:
 >
-> `npm install webfunc graphql-serverless schemaglue lodash --save`
+> `npm i express graphql-serverless schemaglue lodash --save`
 >
 
 _Project Structure Example_
@@ -277,8 +278,9 @@ exports.resolver = {
 // index.js
 
 const { graphqlHandler } = require('graphql-serverless')
-const { app } = require('webfunc')
-const { makeExecutableSchema } = require('graphql-tools') 
+const express = require('express')
+const app = express()
+const { makeExecutableSchema } = require('graphql-tools')
 const glue = require('schemaglue')
 
 const { schema, resolver } = glue('src/graphql')
@@ -290,15 +292,18 @@ const executableSchema = makeExecutableSchema({
 
 const graphqlOptions = {
   schema: executableSchema,
-  graphiql: { 
+  graphiql: { // If you do not want to host any GraphiQl web interface, leave this property undefined.
     endpoint: '/graphiql' 
   }
 }
 
+// Host a GraphQl API on 2 endpoints: '/' and '/graphiql'. '/graphiql' is used to host the GraphiQL web interface.
+// If you're not interested in the GraphiQl web interface, leave the above 'graphqlOptions.graphiql' undefined and 
+// replace the path following ['/', '/graphiql'] with '/'.
 app.all(['/', '/graphiql'], graphqlHandler(graphqlOptions))
 
-
-eval(app.listen('app', 4000))
+// Starting the server 
+app.listen(4000, () => console.log('Server start. Go to http://localhost:4000/graphiql'))
 ```
 
 Simply run `node index.js` and then browse to [http://localhost:4000/graphiql](http://localhost:4000/graphiql).
@@ -513,13 +518,13 @@ If you choose that convention, the GraphQL schema will be properly exported to y
 
 # Contribute
 ## General Guidance
-We're always super excited to accept pull-requests. We're not too nazi on how you implement your fixes or desired features, but we would still highly appreciate if you could:
+We're always super excited to accept pull-requests. We're not too strict about how you implement your fixes or desired features, but we would still highly appreciate if you could:
 
 1. Lint your code using the command `npm run eslint` before pushing your pull-request.
 2. Make sure you've added a unit test under the `test` folder (more about that in the following section).
 3. Make sure all the unit tests pass by running `npm test`
 
-### THANKS A LOT YOU AWESOME GOD COMMITTER!
+### THANKS A LOT YOU AWESOME CONTRIBUTOR!
 
 ## Unit Testing
 All unit tests are located under the `test` folder. There, you will notice 3 main components:
