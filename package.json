@@ -37,6 +37,6 @@
     "graphql": "^0.10.0",
     "graphql-tools": "^1.2.2",
     "mocha": "^3.5.0",
-    "standard-version": "^4.2.0"
+    "standard-version": "^8.0.1"
   }
 }
