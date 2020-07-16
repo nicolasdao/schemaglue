@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.5](https://github.com/nicolasdao/schemaglue/compare/v4.0.4...v4.0.5) (2020-07-16)
+
+
+### Bug Fixes
+
+* Vulnerabilities ([4a9ee0f](https://github.com/nicolasdao/schemaglue/commit/4a9ee0fc1fc1c6f49e68321c89c9bbad0b4fcf3a))
+
 <a name="4.0.4"></a>
 ## [4.0.4](https://github.com/nicolasdao/schemaglue/compare/v0.4.4...v4.0.4) (2019-04-21)
 
