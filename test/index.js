@@ -585,4 +585,12 @@ describe('glue', () => {
 		const { schema } = glue('./test/graphql/mock_07')
 		assert.equal(schema.replace(/\n|\s|\t/g, ''), schemaStr.replace(/\n|\s|\t/g, ''), '')
 	})
+	it('#9 SUPPORT EMPTY TYPES - Should support empty types (ref: https://github.com/nicolasdao/schemaglue/issues/23).', () => {
+		const schemaStr = `
+    type Query {
+      hello: String!
+    }`
+		const { schema } = glue('./test/graphql/mock_08')
+		assert.equal(schema.replace(/\n|\s|\t/g, ''), schemaStr.replace(/\n|\s|\t/g, ''), '')
+	})
 })

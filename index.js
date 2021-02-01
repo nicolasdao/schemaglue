@@ -19,6 +19,7 @@ const getAppConfig = () => {
 	return fs.existsSync(appconfigPath) ? require(appconfigPath) : null
 }
 
+const isMissingSchema = gluedSchema => !gluedSchema || (!gluedSchema.schema && gluedSchema.query == 'type Query {' && gluedSchema.mutation == 'type Mutation {' && gluedSchema.subscription == 'type Subscription {')
 
 // [description]
 // @param  {String} 		schemaFolderPath 	Path to the root folder containing the schema.graphql and resolver files.
@@ -80,7 +81,7 @@ const glue = (schemaFolderPath, options={}) => {
 		return { schema: s, resolver: a.resolver, query: q, mutation: m, subscription: sub } 
 	}, { schema: '', resolver: {}, query: 'type Query {', mutation: 'type Mutation {', subscription: 'type Subscription {' })
 
-	if (!gluedSchema.schema) {
+	if (isMissingSchema(gluedSchema)) {
 		if (schemaPathInConfig)
 			throw new Error(`Missing GraphQL Schema: No schemas found under the path '${path.resolve(schemaPathInConfig)}' defined in the appconfig.json`)
 		else if (schemaFolderPath)
