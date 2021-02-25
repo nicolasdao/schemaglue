@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [](https://github.com/nicolasdao/schemaglue/compare/v4.0.6...v) (2021-02-25)
+
+
+### Features
+
+* add typescript definitions ([9d546c1](https://github.com/nicolasdao/schemaglue/commit/9d546c1f1d72b5395609d89891fd23db0c1efb39))
+
 ### [4.0.6](https://github.com/nicolasdao/schemaglue/compare/v4.0.5...v4.0.6) (2021-02-01)
 
 
