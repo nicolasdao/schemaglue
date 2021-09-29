@@ -1,24 +1,25 @@
-# SchemaGlue &middot;  [![NPM](https://img.shields.io/npm/v/schemaglue.svg?style=flat)](https://www.npmjs.com/package/schemaglue) [![Tests](https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master)](https://travis-ci.org/nicolasdao/schemaglue) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![Neap](https://neap.co/img/made_by_neap.svg)](#this-is-what-we-re-up-to) [![npm downloads](https://img.shields.io/npm/dt/schemaglue.svg?style=flat)](https://www.npmjs.com/package/schemaglue)
+# SchemaGlue &middot;	[![NPM](https://img.shields.io/npm/v/schemaglue.svg?style=flat)](https://www.npmjs.com/package/schemaglue) [![Tests](https://travis-ci.org/nicolasdao/schemaglue.svg?branch=master)](https://travis-ci.org/nicolasdao/schemaglue) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![Neap](https://neap.co/img/made_by_neap.svg)](#this-is-what-we-re-up-to) [![npm downloads](https://img.shields.io/npm/dt/schemaglue.svg?style=flat)](https://www.npmjs.com/package/schemaglue)
 
 Break down your big monolitic GraphQl schema.js file into multiple files following the structure that makes sense to you and your team. _**SchemaGlue.js**_ will glue all those files together for you ♥ ʘ‿ʘ.
->* [Install](#install)
->* [How To Use It](#how-to-use-it)
->   - [In Short](#in-short)
->   - [Typescript Support & Custom Globbing](#typescript-support--custom-globbing)
->   - [Ignoring Certain Files](#ignoring-certain-files)
->   - [Interesting Examples](#interesting-examples)
->   - [Replacing `.graphql` files with plain `.js` or `.ts` files](#replacing-graphql-files-with-plain-js-or-ts-files)
->* [Typescript support](#typescript-support)
->* [Pull-Requests & Contribution](#contribute)
->* [About Us](#this-is-what-we-re-up-to)
-  
+> * [Install](#install)
+> * [How To Use It](#how-to-use-it)
+>	- [In Short](#in-short)
+>	- [Typescript Support & Custom Globbing](#typescript-support--custom-globbing)
+>	- [Ignoring Certain Files](#ignoring-certain-files)
+>	- [Interesting Examples](#interesting-examples)
+>		- [Unions & Interfaces](#unions--interfaces)
+>	- [Replacing `.graphql` files with plain `.js` or `.ts` files](#replacing-graphql-files-with-plain-js-or-ts-files)
+> * [Typescript support](#typescript-support)
+> * [Pull-Requests & Contribution](#contribute)
+> * [About Us](#this-is-what-we-re-up-to)
+	
 # What It Does
 Make your code more readable and understandable by breaking down your monolithic GraphQL schema and resolver into smaller domain models. _**SchemaGlue.js**_ will help glueing them back together.
 
 _**Without SchemaGlue - Stuck With a Monolithic Schema**_
 ```
 - src/
-   |__ schema.js
+	|__ schema.js
 
 - index.js
 - package.json
@@ -26,14 +27,14 @@ _**Without SchemaGlue - Stuck With a Monolithic Schema**_
 _**With SchemaGlue - Structure Your Schema At Will**_
 ```
 - src/
-   |__ graphql/
-          |__ product/
-          |       |__ schema.graphql
-          |       |__ resolver.js
-          |
-          |__ variant/
-                  |__ schema.graphql
-                  |__ resolver.js
+	|__ graphql/
+			|__ product/
+			|		|__ schema.graphql
+			|		|__ resolver.js
+			|
+			|__ variant/
+						|__ schema.graphql
+						|__ resolver.js
 
 - index.js
 - package.json
@@ -72,7 +73,7 @@ const { schema, resolver } = glue('src/graphql', options)
 _Project Structure Example_
 ```
 - src/
-   |__ schema.js
+	|__ schema.js
 
 - index.js
 - package.json
@@ -88,64 +89,64 @@ const _ = require('lodash')
 
 const schema = `
 type Product {
-  id: ID!
-  name: String!
-  shortDescription: String
+	id: ID!
+	name: String!
+	shortDescription: String
 }
 
 type Variant {
-  id: ID!
-  name: String!
-  shortDescription: String
+	id: ID!
+	name: String!
+	shortDescription: String
 }
 
 type Query {
-  # ### GET products
-  #
-  # _Arguments_
-  # - **id**: Product id (optional)
-  products(id: Int): [Product]
+	# ### GET products
+	#
+	# _Arguments_
+	# - **id**: Product id (optional)
+	products(id: Int): [Product]
 
-  # ### GET variants
-  #
-  # _Arguments_
-  # - **id**: Variant id (optional)
-  variants(id: Int): [Variant]
+	# ### GET variants
+	#
+	# _Arguments_
+	# - **id**: Variant id (optional)
+	variants(id: Int): [Variant]
 }
 `
 const productMocks = [{ id: 1, name: 'Product A', shortDescription: 'First product.' }, { id: 2, name: 'Product B', shortDescription: 'Second product.' }]
 const productResolver = {
-  Query: {
-    products(root, { id }, context) {
-      const results = id ? productMocks.filter(p => p.id == id) : productMocks
-      if (results.length > 0)
-        return results
-      else
-        throw graphqlError(404, `Product with id ${id} does not exist.`)
-    }
-  }
+	Query: {
+		products(root, { id }, context) {
+			const results = id ? productMocks.filter(p => p.id == id) : productMocks
+			if (results.length > 0)
+				return results
+			else
+				throw graphqlError(404, `Product with id ${id} does not exist.`)
+		}
+	}
 }
 
 const variantMocks = [{ id: 1, name: 'Variant A', shortDescription: 'First variant.' }, { id: 2, name: 'Variant B', shortDescription: 'Second variant.' }]
 const variantResolver = {
-  Query: {
-    variants(root, { id }, context) {
-      const results = id ? variantMocks.filter(p => p.id == id) : variantMocks
-      if (results.length > 0)
-        return results
-      else
-        throw graphqlError(404, `Variant with id ${id} does not exist.`)
-    }
-  }
+	Query: {
+		variants(root, { id }, context) {
+			const results = id ? variantMocks.filter(p => p.id == id) : variantMocks
+			if (results.length > 0)
+				return results
+			else
+				throw graphqlError(404, `Variant with id ${id} does not exist.`)
+		}
+	}
 }
 
 const executableSchema = makeExecutableSchema({
-  typeDefs: schema,
-  resolvers: _.merge(productResolver, variantResolver) 
+	typeDefs: schema,
+	resolvers: _.merge(productResolver, variantResolver) 
 })
 
 module.exports = {
-  executableSchema
+	executableSchema
 }
 ```
 
@@ -158,10 +159,10 @@ const app = express()
 const { executableSchema } = require('./src/schema')
 
 const graphqlOptions = {
-  schema: executableSchema,
-  graphiql: { // If you do not want to host any GraphiQl web interface, leave this property undefined.
-    endpoint: '/graphiql' 
-  }
+	schema: executableSchema,
+	graphiql: { // If you do not want to host any GraphiQl web interface, leave this property undefined.
+		endpoint: '/graphiql' 
+	}
 }
 
 // Host a GraphQl API on 2 endpoints: '/' and '/graphiql'. '/graphiql' is used to host the GraphiQL web interface.
@@ -184,14 +185,14 @@ Simply run `node index.js` and then browse to [http://localhost:4000/graphiql](h
 _Project Structure Example_
 ```
 - src/
-   |__ graphql/
-          |__ product/
-          |       |__ schema.graphql
-          |       |__ resolver.js
-          |
-          |__ variant/
-                  |__ schema.graphql
-                  |__ resolver.js
+	|__ graphql/
+			|__ product/
+			|		|__ schema.graphql
+			|		|__ resolver.js
+			|
+			|__ variant/
+						|__ schema.graphql
+						|__ resolver.js
 
 - index.js
 - package.json
@@ -203,17 +204,17 @@ This is just one example of how to structure the schema and resolver. _**schemag
 // src/graphql/product/schema.graphql
 
 type Product {
-  id: ID!
-  name: String!
-  shortDescription: String
+	id: ID!
+	name: String!
+	shortDescription: String
 }
 
 type Query {
-  # ### GET products
-  #
-  # _Arguments_
-  # - **id**: Product id (optional)
-  products(id: Int): [Product]
+	# ### GET products
+	#
+	# _Arguments_
+	# - **id**: Product id (optional)
+	products(id: Int): [Product]
 }
 ```
 
@@ -225,15 +226,15 @@ const { graphqlError } = require('graphql-serverless')
 const productMocks = [{ id: 1, name: 'Product A', shortDescription: 'First product.' }, { id: 2, name: 'Product B', shortDescription: 'Second product.' }]
 
 exports.resolver = {
-  Query: {
-    products(root, { id }, context) {
-      const results = id ? productMocks.filter(p => p.id == id) : productMocks
-      if (results.length > 0)
-        return results
-      else
-        throw graphqlError(404, `Product with id ${id} does not exist.`)
-    }
-  }
+	Query: {
+		products(root, { id }, context) {
+			const results = id ? productMocks.filter(p => p.id == id) : productMocks
+			if (results.length > 0)
+				return results
+			else
+				throw graphqlError(404, `Product with id ${id} does not exist.`)
+		}
+	}
 }
 ```
 
@@ -241,17 +242,17 @@ exports.resolver = {
 // src/graphql/variant/schema.graphql
 
 type Variant {
-  id: ID!
-  name: String!
-  shortDescription: String
+	id: ID!
+	name: String!
+	shortDescription: String
 }
 
 type Query {
-  # ### GET variants
-  #
-  # _Arguments_
-  # - **id**: Variant id (optional)
-  variants(id: Int): [Variant]
+	# ### GET variants
+	#
+	# _Arguments_
+	# - **id**: Variant id (optional)
+	variants(id: Int): [Variant]
 }
 ```
 
@@ -263,15 +264,15 @@ const { graphqlError } = require('graphql-serverless')
 const variantMocks = [{ id: 1, name: 'Variant A', shortDescription: 'First variant.' }, { id: 2, name: 'Variant B', shortDescription: 'Second variant.' }]
 
 exports.resolver = {
-  Query: {
-    variants(root, { id }, context) {
-      const results = id ? variantMocks.filter(p => p.id == id) : variantMocks
-      if (results.length > 0)
-        return results
-      else
-        throw graphqlError(404, `Variant with id ${id} does not exist.`)
-    }
-  }
+	Query: {
+		variants(root, { id }, context) {
+			const results = id ? variantMocks.filter(p => p.id == id) : variantMocks
+			if (results.length > 0)
+				return results
+			else
+				throw graphqlError(404, `Variant with id ${id} does not exist.`)
+		}
+	}
 }
 ```
 
@@ -287,15 +288,15 @@ const glue = require('schemaglue')
 const { schema, resolver } = glue('src/graphql')
 
 const executableSchema = makeExecutableSchema({
-    typeDefs: schema,
-    resolvers: resolver
+	typeDefs: schema,
+	resolvers: resolver
 })
 
 const graphqlOptions = {
-  schema: executableSchema,
-  graphiql: { // If you do not want to host any GraphiQl web interface, leave this property undefined.
-    endpoint: '/graphiql' 
-  }
+	schema: executableSchema,
+	graphiql: { // If you do not want to host any GraphiQl web interface, leave this property undefined.
+		endpoint: '/graphiql' 
+	}
 }
 
 // Host a GraphQl API on 2 endpoints: '/' and '/graphiql'. '/graphiql' is used to host the GraphiQL web interface.
@@ -346,21 +347,21 @@ const { schema, resolver } = glue('./src/graphql', { js: '**/*.ts' })
 ```
 
 ## Interesting Examples
-_**Unions & Interfaces**_
+### Unions & Interfaces
 
 If you're not familiar with this concept, check out this great article [GraphQL Tour: Interfaces and Unions](https://medium.com/the-graphqlhub/graphql-tour-interfaces-and-unions-7dd5be35de0d). 
 
 In our case, we're interested is knowing how to structure our code with unions or interfaces. If your schema is small, I would recommend to manage your unions and intefaces definitions inside a single schema.js file per model:
 ```
 - src/
-   |__ graphql/
-          |__ product/
-          |       |__ schema.graphql
-          |       |__ resolver.js
-          |
-          |__ variant/
-                  |__ schema.graphql
-                  |__ resolver.js
+	|__ graphql/
+			|__ product/
+			|		|__ schema.graphql
+			|		|__ resolver.js
+			|
+			|__ variant/
+						|__ schema.graphql
+						|__ resolver.js
 
 - index.js
 - package.json
@@ -389,11 +390,11 @@ enum SportType {
 }
 
 type Query {
-  # ### GET products
-  #
-  # _Arguments_
-  # - **id**: Product id (optional)
-  products(id: Int): [Product]
+	# ### GET products
+	#
+	# _Arguments_
+	# - **id**: Product id (optional)
+	products(id: Int): [Product]
 }
 ```
 
@@ -402,35 +403,64 @@ _resolver.js_
 const { graphqlError } = require('graphql-serverless')
 
 const productMocks = [{ 
-  id: 1,
-  brand: 'Giant',
-  wheels: 2 
+	id: 1,
+	brand: 'Giant',
+	wheels: 2 
 },{ 
-  id: 2,
-  brand: 'Prince',
-  sportType: 'TENNIS' 
+	id: 2,
+	brand: 'Prince',
+	sportType: 'TENNIS' 
 }]
 
 exports.resolver = {
-  Query: {
-    products(root, { id }, context) {
-      const results = id ? productMocks.filter(p => p.id == id) : productMocks
-      if (results.length > 0)
-        return results
-      else
-        throw graphqlError(404, `Product with id ${id} does not exist.`)
-    }
-  },
+	Query: {
+		products(root, { id }, context) {
+			const results = id ? productMocks.filter(p => p.id == id) : productMocks
+			if (results.length > 0)
+				return results
+			else
+				throw graphqlError(404, `Product with id ${id} does not exist.`)
+		}
+	},
 
-  Product: {
-    __resolveType(obj, context, info) {
-      return  obj.wheels ? 'Bicycle' :
-          obj.sportType ? 'Racket' : null
-    }
-  }
+	Product: {
+	__resolveType(obj, context, info) {
+		return	obj.wheels ? 'Bicycle' :
+			obj.sportType ? 'Racket' : null
+	}
+	}
 }
 ```
 > Notice you need to define a _resolveType_ method for the _Product_ type under the _exports.resolver_
+
+### Mix `.graphql` files with inline string schemas
+
+```js
+const glue = require('schemaglue')
+
+const { schema } = glue('src/graphql', {
+	schemas:[`
+	type Product {
+		id: ID
+		name: String
+	}
+
+	type Query {
+		products(id:ID, name:String): [Product]
+	}`,
+	`
+	enum VehicleEnum {
+		car
+		bike
+		bus
+	}
+
+	type Mutation {
+		createCar: Car
+	}
+	`]
+})
+```
 
 ## Replacing `.graphql` files with plain `.js` or `.ts` files
 
@@ -442,26 +472,26 @@ __`product.graphql` example:__
 
 ```graphql
 type Product {
-  id: ID!
-  name: String!
-  shortDescription: String
+	id: ID!
+	name: String!
+	shortDescription: String
 }
 
 type ProductNameChangedMsg {
-  id: ID!
-  name: String
+	id: ID!
+	name: String
 }
 
 type Query {
-  products(id: Int): [Product]
+	products(id: Int): [Product]
 }
 
 type Mutation {
-  productUpdateName(id: Int, name: String): ProductNameChangedMsg
+	productUpdateName(id: Int, name: String): ProductNameChangedMsg
 }
 
 type Subscription {
-  productNameChanged(id: Int): ProductNameChangedMsg
+	productNameChanged(id: Int): ProductNameChangedMsg
 }
 ```
 
@@ -470,27 +500,27 @@ __`product.js` example:__
 ```js
 exports.schema = `
 type Product {
-  id: ID!
-  name: String!
-  shortDescription: String
+	id: ID!
+	name: String!
+	shortDescription: String
 }
 
 type ProductNameChangedMsg {
-  id: ID!
-  name: String
+	id: ID!
+	name: String
 }
 `
 
 exports.query = `
-  products(id: Int): [Product]
+	products(id: Int): [Product]
 `
 
 exports.mutation = `
-  productUpdateName(id: Int, name: String): ProductNameChangedMsg
+	productUpdateName(id: Int, name: String): ProductNameChangedMsg
 `
 
 exports.subscription = `
-  productNameChanged(id: Int): ProductNameChangedMsg
+	productNameChanged(id: Int): ProductNameChangedMsg
 `
 ```
 
