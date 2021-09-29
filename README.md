@@ -6,8 +6,9 @@ Break down your big monolitic GraphQl schema.js file into multiple files followi
 >	- [In Short](#in-short)
 >	- [Typescript Support & Custom Globbing](#typescript-support--custom-globbing)
 >	- [Ignoring Certain Files](#ignoring-certain-files)
->	- [Interesting Examples](#interesting-examples)
->		- [Unions & Interfaces](#unions--interfaces)
+>	- [Custom Extensions](#custom-extensions)
+>	- [Unions & Interfaces](#unions--interfaces)
+>	- [Mix `.graphql` files with inline string schemas](#mix-graphql-files-with-inline-string-schemas)
 >	- [Replacing `.graphql` files with plain `.js` or `.ts` files](#replacing-graphql-files-with-plain-js-or-ts-files)
 > * [Typescript support](#typescript-support)
 > * [Pull-Requests & Contribution](#contribute)
@@ -341,13 +342,13 @@ const { schema:schema1 } = glue('./src/graphql', { ignore: 'variant/**' })
 ```
 
 ## Custom Extensions
+
 You can specify a custom glob to select your resolver files with different extensions.
 ```js
 const { schema, resolver } = glue('./src/graphql', { js: '**/*.ts' })
 ```
 
-## Interesting Examples
-### Unions & Interfaces
+## Unions & Interfaces
 
 If you're not familiar with this concept, check out this great article [GraphQL Tour: Interfaces and Unions](https://medium.com/the-graphqlhub/graphql-tour-interfaces-and-unions-7dd5be35de0d). 
 
@@ -433,7 +434,7 @@ exports.resolver = {
 ```
 > Notice you need to define a _resolveType_ method for the _Product_ type under the _exports.resolver_
 
-### Mix `.graphql` files with inline string schemas
+## Mix `.graphql` files with inline string schemas
 
 ```js
 const glue = require('schemaglue')
