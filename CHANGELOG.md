@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/nicolasdao/schemaglue/compare/v4.1.0...v4.2.0) (2021-09-29)
+
+
+### Features
+
+* Add support for glueing inline string schema ([835634c](https://github.com/nicolasdao/schemaglue/commit/835634c1fe39c4ccf3680cbc3411551da72cdbfa))
+
 ## [4.1.0](https://github.com/nicolasdao/schemaglue/compare/v4.0.6...v4.1.0) (2021-02-25)
 
 
