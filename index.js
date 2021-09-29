@@ -24,6 +24,7 @@ const isMissingSchema = gluedSchema => !gluedSchema || (!gluedSchema.schema && g
 // [description]
 // @param  {String} 		schemaFolderPath 	Path to the root folder containing the schema.graphql and resolver files.
 // @param  {Object} 		options          	Options object.
+// @param  {[String]} 		options.schemas     inline schemas.
 // @param  {String|Array} 	options.ignore      Defines globbing patterns to ignore certain files or folders (e.g., ignore: ['**/productquery.js', '**/variantquery.js'], ignore: ignore: 'variant/*').
 // @param  {String} 		options.mode 		Defines whether the GraphQL resolvers are defined using standard javascript files, typescript files or a custom globbing pattern. 
 // 												Valid values: 'js', 'ts', '<globbing pattern>'	
@@ -31,7 +32,8 @@ const isMissingSchema = gluedSchema => !gluedSchema || (!gluedSchema.schema && g
 // @return {String}         result.schema 		Aggregated string made of all the schemas defined in the various .graphql files under folder located at 'schemaFolderPath'
 // @return {Object}         result.resolve   	Aggregated object made of all the resolvers defined in the various .graphql files under folder located at 'schemaFolderPath'
 //
-const glue = (schemaFolderPath, options={}) => {
+const glue = (schemaFolderPath, options) => {
+	options = options || {}
 	let schemaPathInConfig = null
 	let ignore = null
 	let resolverFileGlob = 
@@ -58,19 +60,10 @@ const glue = (schemaFolderPath, options={}) => {
 	const jsFiles = glob.sync(resolverFiles, { ignore: ignored }) || []
 	const graphqlFiles = glob.sync(schemaGraphQlFiles, { ignore: ignored }) || []
 	const modules = jsFiles.map(f => require(f))
-	modules.push(...graphqlFiles.map(f => {
-		const parts = getSchemaParts(fs.readFileSync(f, 'utf8'))
-		if (!parts)
-			return null
-		else
-			return {
-				schema: parts.types ? parts.types.body : null,
-				resolver: null,
-				query: parts.query ? parts.query.body : null,
-				mutation: parts.mutation ? parts.mutation.body : null,
-				subscription: parts.subscription ? parts.subscription.body : null
-			}
-	}).filter(x => x))
+	modules.push(...graphqlFiles.map(f => parseStringSchema(fs.readFileSync(f, 'utf8'))).filter(x => x))
+	if (options.schemas && Array.isArray(options.schemas) && options.schemas.length)
+		modules.push(...options.schemas.map(parseStringSchema).filter(x => x))
+
 	const gluedSchema = (modules || []).reduce((a, { schema, resolver, query, mutation, subscription }) => {
 		const s = schema && typeof(schema) == 'string' ? (a.schema + '\n' + schema).trim() : a.schema
 		const q = query && typeof(query) == 'string' ? (a.query + '\n' + query).trim() : a.query
@@ -104,6 +97,30 @@ const glue = (schemaFolderPath, options={}) => {
 	}
 
 	return { schema: gluedSchema.schema, resolver: gluedSchema.resolver }
+}
+
+/**
+ * 
+ * @param  {String} strSchema		e.g., 'type Product { id:ID name:String } type Query { products(id:ID name:String): [Product] }'
+ * 
+ * @return {String} output.schema 
+ * @return {Object} output.resolver	null 
+ * @return {String} output.query 
+ * @return {String} output.mutation 
+ * @return {String} output.subscription 
+ */
+const parseStringSchema = strSchema => {
+	const parts = getSchemaParts(strSchema)
+	if (!parts)
+		return null
+	else
+		return {
+			schema: parts.types ? parts.types.body : null,
+			resolver: null,
+			query: parts.query ? parts.query.body : null,
+			mutation: parts.mutation ? parts.mutation.body : null,
+			subscription: parts.subscription ? parts.subscription.body : null
+		}
 }
 
 module.exports = glue
