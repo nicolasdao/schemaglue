@@ -29,15 +29,15 @@
     "url": "https://github.com/nicolasdao/schemaglue.git"
   },
   "dependencies": {
-    "chai": "^4.3.4",
-    "eslint": "^7.32.0",
     "glob": "^7.1.2",
-    "mocha": "^9.1.2",
-    "shortid": "^2.2.8",
-    "standard-version": "^9.3.1"
+    "shortid": "^2.2.8"
   },
   "devDependencies": {
-    "graphql": "^0.10.0",
-    "graphql-tools": "^1.2.2"
+    "chai": "^4.3.4",
+    "eslint": "^7.32.0",
+    "graphql": "^15.6.1",
+    "graphql-tools": "^8.2.0",
+    "mocha": "^9.1.2",
+    "standard-version": "^9.3.1"
   }
 }
